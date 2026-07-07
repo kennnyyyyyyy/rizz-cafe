@@ -252,15 +252,75 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
 .boardrow.top{background:var(--green); color:#fff3d6;}
 .boardrow .bscore{font-family:'Press Start 2P',monospace; font-size:13px; color:var(--gold);}
 
-/* ---------- responsive ---------- */
+/* ---------- mute button ---------- */
+#mutebtn{background:var(--wood-l); border:3px solid var(--ink); box-shadow:2px 2px 0 var(--ink);
+  font-size:16px; line-height:1; padding:6px 8px; color:#fff; flex-shrink:0;}
+#mutebtn:active{transform:translate(1px,1px); box-shadow:1px 1px 0 var(--ink);}
+
+/* ---------- read-the-room tell ---------- */
+#tell{font-size:18px; color:var(--gold); background:rgba(43,29,14,.4);
+  border:3px solid var(--ink); padding:5px 12px; margin-top:8px; text-align:center;
+  line-height:1.2; min-height:30px; transition:color .2s;}
+
+/* ---------- typing indicator ---------- */
+.bub.typing{opacity:.85; font-style:italic;}
+.bub.typing .td{animation:tdot 1s infinite; display:inline-block;}
+.bub.typing .td:nth-child(2){animation-delay:.2s;}
+.bub.typing .td:nth-child(3){animation-delay:.4s;}
+@keyframes tdot{0%,60%,100%{opacity:.2; transform:translateY(0);}30%{opacity:1; transform:translateY(-3px);}}
+
+/* ---------- mid-date event ---------- */
+#eventboard{position:fixed; inset:0; z-index:57; display:none; align-items:center; justify-content:center;
+  background:rgba(43,29,14,.7);}
+#eventboard.open{display:flex;}
+.eventbox{width:min(560px,94vw); padding:26px; display:flex; flex-direction:column; gap:16px;
+  animation:popin .35s cubic-bezier(.34,1.56,.64,1) both;}
+#eventq{font-size:25px; color:var(--cream); text-align:center; line-height:1.35;}
+#eventchoices{display:flex; flex-direction:column; gap:12px;}
+.eventbtn{font-size:15px; padding:14px 16px; text-align:left; line-height:1.4; background:var(--wood-l);}
+
+/* ---------- achievements on result ---------- */
+#achrow{display:none; flex-direction:column; align-items:center; gap:8px; width:100%;}
+.achhead{font-family:'Press Start 2P',monospace; font-size:9px; color:var(--gold); text-shadow:2px 2px 0 var(--ink);}
+.achbadges{display:flex; flex-wrap:wrap; gap:10px; justify-content:center;}
+.achbadge{display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 12px;
+  background:var(--wood-l); border:3px solid var(--ink); box-shadow:3px 3px 0 var(--ink);
+  font-size:16px; color:var(--cream); min-width:78px; text-align:center; line-height:1.1;
+  animation:popin .4s cubic-bezier(.34,1.56,.64,1) both;}
+.achbadge .ache{font-size:26px;}
+
+/* ---------- title cafe scene ---------- */
+#cafescene{display:flex; gap:clamp(6px,3vw,34px); align-items:flex-end; justify-content:center;
+  margin-top:30px; z-index:3; flex-wrap:wrap;}
+.cafeseat{display:flex; flex-direction:column; align-items:center;
+  animation:seatbob 2.6s ease-in-out infinite;}
+@keyframes seatbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.cafeseat canvas{image-rendering:pixelated;}
+.tabletop{margin-top:2px; filter:drop-shadow(0 3px 0 rgba(43,29,14,.3));}
+
+/* ---------- responsive: phone chat-app layout ---------- */
 @media (max-width:720px){
-  #gamemain{flex-direction:column;}
-  #charpanel{width:100%; flex-direction:row; justify-content:flex-start; padding:8px;}
-  #charcv{width:110px !important; height:auto !important;}
-  #charpanel > div{display:flex; flex-direction:column; gap:4px;}
-  #hud{flex-wrap:wrap;}
-  #titlebtns{gap:18px;}
-  body{overflow-y:auto;}
+  body{font-size:19px;}
+  #game{padding:0; justify-content:flex-start;}
+  #hud{width:100%; margin-bottom:0; border-width:0 0 4px 0; box-shadow:none; gap:8px; padding:8px 10px; border-radius:0;}
+  #gamemain{flex-direction:column; width:100%; gap:0; flex:1;}
+  #charpanel{width:100%; flex-direction:row; align-items:center; justify-content:flex-start;
+    padding:6px 10px; gap:10px; border-width:0 0 4px 0; box-shadow:none; overflow:visible;}
+  #charcv{width:64px !important; height:auto !important;}
+  #charpanel > div{display:flex; flex-direction:column; gap:2px;}
+  #charname{font-size:9px;}
+  #charmood{font-size:16px;}
+  #chatpanel{flex:1; border-width:0; box-shadow:none; padding:8px 8px 10px; min-height:0;}
+  .bub{max-width:88%; font-size:19px;}
+  #tell{font-size:15px; min-height:26px; margin-top:6px;}
+  #chatin{font-size:20px;}
+  #cafescene{gap:8px; margin-top:18px;}
+  #titlebtns{gap:16px; margin-top:34px;}
+  body:has(#game.active){overflow:hidden;}
+  body:has(#setup.active), body:has(#result.active), body:has(#board.active), body:has(#howto.open){overflow-y:auto;}
+}
+@media (max-height:520px){
+  #cafescene{display:none;}
 }
 </style>
 </head>
@@ -293,6 +353,7 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
     <button class="crate" id="btnNew">NEW GAME ☕<canvas id="btnNewIcon"></canvas></button>
     <button class="crate" id="btnHow">HOW TO PLAY<canvas id="btnHowIcon"></canvas></button>
   </div>
+  <div id="cafescene"></div>
   <div id="titlefoot">a cozy pixel charm game &bull; pass-and-play</div>
 </div>
 
@@ -348,7 +409,8 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
   <div id="hud" class="wood">
     <div id="hudname">VIBE</div>
     <div id="vibewrap"><div id="vibefill"></div><div id="vibetxt">40</div></div>
-    <div id="turns">TURN 1/10</div>
+    <div id="turns">☕ COFFEE 1/4</div>
+    <button id="mutebtn" title="mute / unmute">🔊</button>
   </div>
   <div id="gamemain">
     <div id="charpanel" class="wood">
@@ -360,11 +422,20 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
     </div>
     <div id="chatpanel" class="wood">
       <div id="chatlog"></div>
+      <div id="tell">👁 read the room…</div>
       <div id="inputrow">
         <input id="chatin" maxlength="160" placeholder="say something charming..." autocomplete="off">
         <button class="pixbtn" id="sendbtn">SEND</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- MID-DATE EVENT -->
+<div id="eventboard">
+  <div class="eventbox wood">
+    <div id="eventq"></div>
+    <div id="eventchoices"></div>
   </div>
 </div>
 
@@ -387,6 +458,7 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
     <div id="bigscore">0</div>
     <div id="rank"></div>
     <div id="scorebreak"></div>
+    <div id="achrow"></div>
     <button class="pixbtn green" id="btnBoard">LEADERBOARD →</button>
   </div>
 </div>
@@ -886,15 +958,35 @@ function paint(ctx, rows, pal, scale, ox, oy){
     const col = pal[ch]; if(col){ctx.fillStyle=col; ctx.fillRect((x+ox)*scale,(y+oy)*scale,scale,scale);}
   }));
 }
-function drawBust(cv, charKey, expr, scale){
+// per-stage backdrop palettes (same art, re-tinted) — cafe / park / dessert
+const BG_PALS = {
+  cafe: BUST_BG_PAL,
+  park: {'.':null,'W':'#a9d6b0','F':'#4d6b2a','B':'#bfe4f0','b':'#bfe4f0',
+    'L':'#e8f7ff','P':'#3d7a2a','Q':'#2c5a1e','T':'#6a8f3c','D':'#4d6b2a'},
+  dessert:{'.':null,'W':'#f4cadd','F':'#c98f5f','B':'#ffe9a3','b':'#ffe9a3',
+    'L':'#fff6e0','P':'#e8733a','Q':'#c25a2a','T':'#d9a06a','D':'#b87c4c'}
+};
+// a blink overlay: keep the current mouth, close the eyes to a soft line.
+function blinkOverlay(expr){
+  const base = (EXPR[expr]||EXPR.neutral).slice();
+  base[1]="....................";
+  base[2]="......EE....EE......";
+  base[3]="....................";
+  return base;
+}
+function drawBust(cv, charKey, expr, scale, opts){
+  opts = opts||{};
   const ch = CHARS[charKey];
   cv.width = 20*scale; cv.height = 22*scale;
   const c = cv.getContext('2d'); c.imageSmoothingEnabled=false;
-  paint(c, BUST_BG, BUST_BG_PAL, scale, 0, 0);
+  c.clearRect(0,0,cv.width,cv.height);
+  paint(c, BUST_BG, BG_PALS[opts.bg]||BUST_BG_PAL, scale, 0, 0);
   const bodyPal = {'.':null,'k':ch.skin,'j':ch.skinS,'H':ch.hair,'h':ch.hairH,'C':ch.cloth,'V':ch.clothS};
-  paint(c, ch.target==='her'?BODY_HER:BODY_HIM, bodyPal, scale, 0, 0);
+  const sx = opts.swayX||0;
+  paint(c, ch.target==='her'?BODY_HER:BODY_HIM, bodyPal, scale, sx, 0);
   const exPal = {'.':null,'E':'#3a2417','R':'#f2758f','w':'#ffffff'};
-  paint(c, EXPR[expr]||EXPR.neutral, exPal, scale, 0, 6);
+  const ex = opts.blink ? blinkOverlay(expr) : (EXPR[expr]||EXPR.neutral);
+  paint(c, ex, exPal, scale, sx, 6);
 }
 
 /* ============================================================
@@ -938,10 +1030,10 @@ const CHARS = {
    DIFFICULTY TUNING
    ============================================================ */
 const DIFF = {
-  easy:{start:42,cap:10,mult:1,posScale:1.15,negScale:0.6,label:"Easy"},
-  med:{start:32,cap:8,mult:1.6,posScale:1.0,negScale:1.0,label:"Medium"},
-  hard:{start:22,cap:7,mult:2.4,posScale:0.8,negScale:1.25,label:"Hard"},
-  krishna:{start:35,cap:9,mult:3,posScale:1.0,negScale:1.15,label:"Krishna"}
+  easy:{start:45,mult:1,posScale:1.2,negScale:0.5,stageTurns:4,label:"Easy"},
+  med:{start:34,mult:1.6,posScale:1.0,negScale:1.0,stageTurns:4,label:"Medium"},
+  hard:{start:18,mult:2.8,posScale:0.4,negScale:1.8,stageTurns:4,label:"Hard"},
+  krishna:{start:30,mult:3.4,posScale:0.6,negScale:1.7,stageTurns:5,label:"Krishna"}
 };
 
 /* ============================================================
@@ -1048,6 +1140,10 @@ function krishnaHijack(text){
   return text + pick(CRINGE_SUFFIX);
 }
 
+// sweet / creative / thoughtful signals — what stingy Sofia actually wants
+const SWEET = ["you're","your smile","your eyes","admire","beautiful","gorgeous","stunning","radiant",
+  "elegant","impressive","fascinating","captivating","the way you","i noticed","reminds me","imagine us",
+  "makes me","brighten","glad i","lucky","grateful","treasure","genuinely","thoughtful","poetic","warms"];
 function offlineJudge(text, charKey, diffKey){
   const t = " "+text.toLowerCase().trim()+" ";
   const d = DIFF[diffKey], bank = REPLIES[charKey];
@@ -1058,9 +1154,14 @@ function offlineJudge(text, charKey, diffKey){
   let score = 0;
   const words = text.trim().split(/\s+/).filter(Boolean);
   const len = text.trim().length;
+  const asks = text.includes('?');
+  const warm = has(t, WARM);
+  const sweet = has(t, SWEET);
+  const creative = sweet && (len>=24) && words.length>=5;   // a real, crafted sweet line
   // curiosity: asking about them
-  if(text.includes('?')) score += 7;
-  if(has(t, WARM)) score += 6;
+  if(asks) score += 7;
+  if(warm) score += 6;
+  if(sweet) score += 6;
   // reasonable effort
   if(len>=12 && len<=140) score += 4;
   if(words.length>=3 && words.length<=28) score += 2;
@@ -1073,6 +1174,15 @@ function offlineJudge(text, charKey, diffKey){
   if(text===text.toUpperCase() && len>6) score -= 4; // ALL CAPS yelling
   // a little variance so it feels alive
   score += Math.floor(Math.random()*7)-3;
+  // HARD: she's stingy & prickly. Bland/low-effort lines drift negative;
+  // only a genuinely creative, sweet line earns her warmth.
+  if(diffKey==='hard'){
+    if(!creative) score -= 7;
+    if(!warm && !sweet && !asks) score -= 6;
+    if(creative) score += 8;
+  }
+  // KRISHNA: pure chaos gremlin — nudges everything downward for good measure.
+  if(diffKey==='krishna'){ score -= 4; }
   // scale by difficulty
   if(score>=0) score = Math.round(score*d.posScale);
   else score = Math.round(score*d.negScale);
@@ -1090,15 +1200,28 @@ function offlineJudge(text, charKey, diffKey){
 /* ============================================================
    AI — online Worker path with offline fallback.
    ============================================================ */
+const DIFF_SYS = {
+  easy:"You are warm and easily charmed; be generous with positive deltas for any decent effort.",
+  med:"You have standards; reward genuine wit and warmth, shrug off generic lines.",
+  hard:"You are EXTREMELY stingy, prickly and hard to please. Almost everything bores or mildly annoys you "
+    +"(negative or zero delta). ONLY a genuinely creative, specific, sweet line — real thought, not a cliché — "
+    +"earns a small positive delta. Never give big positives. Be a little sarcastic and cold.",
+  krishna:"You are a chaotic troll. You are almost impossible to please: default to negative deltas, act confused, "
+    +"contrarian and easily annoyed, and rarely give any positive. Be unpredictable and difficult."
+};
 function buildSystem(charKey, diffKey){
   const ch = CHARS[charKey], d = DIFF[diffKey];
+  let extra = DIFF_SYS[diffKey] || "";
+  if(typeof G!=='undefined' && G && G.interests && G.interests.length){
+    extra += " Secretly you love these topics: "+G.interests.map(i=>i.name).join(", ")
+      +". If the player brings one up genuinely, react with extra delight and a bigger positive delta.";
+  }
   return "You role-play a friendly cafe stranger named "+ch.name+" in Krishna's Rizz Cafe, a lighthearted PG game "
     +"for a school club. Keep every reply clean and appropriate for teenagers — never sexual, explicit, suggestive, "
     +"or romantic beyond a wholesome 'you seem cool' level. You are won over by genuine humor, confidence, kindness, "
     +"curiosity and clever banter. You are put off by anything crude, creepy, sexual, aggressive or desperate — react "
     +"with boredom or mild disgust and a negative delta; never play along with it. Stay in character with 1-2 short "
-    +"texting-style sentences. Difficulty is "+d.label+" (higher difficulty = harder to impress, smaller positive "
-    +"deltas). Personality: "+ch.persona+" Return ONLY valid JSON of the form "
+    +"texting-style sentences. Difficulty is "+d.label+". "+extra+" Personality: "+ch.persona+" Return ONLY valid JSON of the form "
     +'{"reply": string, "delta": integer from -25 to 25, "expression": one of '
     +'"love"|"smile"|"neutral"|"unimpressed"|"annoyed", "note": short string}.';
 }
@@ -1177,6 +1300,206 @@ const BHAJI_LINE = {
   her_krishna:"onion bhaji?! okay even through all this chaos, you GET it 😍",
   him_krishna:"onion bhaji?! bro the chaos parted for a second — instant respect 😍"
 };
+
+/* ============================================================
+   SOUND — all 8-bit SFX + lo-fi ambience synthesized in-code
+   with the Web Audio API (no external files). Mute-able.
+   ============================================================ */
+const SFX = (function(){
+  let ctx=null, muted=false, amb=null, master=null;
+  function ensure(){
+    if(ctx) return ctx;
+    const AC = window.AudioContext||window.webkitAudioContext;
+    if(!AC) return null;
+    ctx = new AC();
+    master = ctx.createGain(); master.gain.value=0.32; master.connect(ctx.destination);
+    return ctx;
+  }
+  function beep(freq,dur,type,vol,slideTo){
+    if(muted) return;
+    const c=ensure(); if(!c) return;
+    const o=c.createOscillator(), g=c.createGain();
+    o.type=type||'square'; o.frequency.setValueAtTime(freq,c.currentTime);
+    if(slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(20,slideTo), c.currentTime+dur);
+    g.gain.setValueAtTime(0.0001,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(vol||0.3,c.currentTime+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+dur);
+    o.connect(g); g.connect(master);
+    o.start(); o.stop(c.currentTime+dur+0.03);
+  }
+  function chord(fs,dur,type,vol){ fs.forEach(f=>beep(f,dur,type,vol)); }
+  function startAmbient(){
+    if(muted) return; const c=ensure(); if(!c||amb) return;
+    const g=c.createGain(); g.gain.value=0.05;
+    const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=520;
+    g.connect(lp); lp.connect(master);
+    const o1=c.createOscillator(); o1.type='sine'; o1.frequency.value=98;
+    const o2=c.createOscillator(); o2.type='sine'; o2.frequency.value=147; o2.detune.value=7;
+    const lfo=c.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.09;
+    const lfoG=c.createGain(); lfoG.gain.value=0.02; lfo.connect(lfoG); lfoG.connect(g.gain);
+    o1.connect(g); o2.connect(g); o1.start(); o2.start(); lfo.start();
+    amb={o1,o2,lfo};
+  }
+  function stopAmbient(){ if(!amb) return; try{amb.o1.stop();amb.o2.stop();amb.lfo.stop();}catch(e){} amb=null; }
+  return {
+    send(){ beep(520,0.08,'square',0.22,760); },
+    recv(){ beep(340,0.07,'triangle',0.2); },
+    type(){ beep(1200,0.02,'square',0.08); },
+    love(){ chord([523,659,784],0.45,'triangle',0.16); setTimeout(()=>beep(1046,0.28,'triangle',0.15),110); },
+    bad(){ beep(210,0.28,'sawtooth',0.22,80); },
+    pop(){ beep(680,0.05,'square',0.18); },
+    win(){ [523,659,784,1046].forEach((f,i)=>setTimeout(()=>beep(f,0.24,'square',0.2),i*110)); },
+    lose(){ [392,330,262].forEach((f,i)=>setTimeout(()=>beep(f,0.34,'sawtooth',0.2),i*160)); },
+    event(){ beep(880,0.1,'square',0.18); setTimeout(()=>beep(660,0.1,'square',0.18),110); },
+    ach(){ [784,988,1319].forEach((f,i)=>setTimeout(()=>beep(f,0.18,'square',0.18),i*90)); },
+    resume(){ const c=ensure(); if(c&&c.state==='suspended') c.resume(); },
+    startAmbient, stopAmbient,
+    toggle(){ muted=!muted; if(muted) stopAmbient(); else startAmbient(); return muted; },
+    isMuted(){ return muted; }
+  };
+})();
+
+/* ============================================================
+   NAME REACTION — the date judges your name before you speak.
+   ============================================================ */
+const NAME_LOVE = ["kenzo","kenny"];
+const NAME_HATE = ["krishna"];
+const NAME_GOOD = ["alex","sam","mia","luna","leo","noah","aria","kai","zoe","ravi",
+  "aisha","chloe","liam","maya","ivy","theo","nina","omar","sara","dev","emma","jay"];
+function scoreName(name){
+  const n=(name||"").trim().toLowerCase();
+  if(NAME_LOVE.includes(n)) return {bonus:10, expr:'love',
+    line:'"'+name+'"?? okay i already like you. what a cute name 😍'};
+  if(NAME_HATE.includes(n)) return {bonus:-20, expr:'annoyed',
+    line:'ugh... "'+name+'"? that name gives me the ick. rough start.'};
+  if(NAME_GOOD.includes(n)) return {bonus:6, expr:'smile',
+    line:'"'+name+'" — nice, i like that name.'};
+  if(!n || /\d/.test(n) || n.length<2) return {bonus:-8, expr:'unimpressed',
+    line:'"'+name+'"? is that even a real name? weird energy.'};
+  const vowels=(n.match(/[aeiou]/g)||[]).length;
+  if(vowels>=1 && n.length<=8) return {bonus:4, expr:'smile',
+    line:'"'+name+'"? hm, that has a nice ring to it.'};
+  return {bonus:-4, expr:'neutral',
+    line:'"'+name+'"... okay. unusual. we\'ll see about you.'};
+}
+
+/* ============================================================
+   HIDDEN INTERESTS — 2-3 secret topics per date; hitting one
+   gives a combo bonus and a "you found something they love" cue.
+   ============================================================ */
+const INTEREST_POOL = [
+  {id:'music', name:'music', emoji:'🎵', kw:['music','song','band','guitar','concert','playlist','sing','album','spotify','lo-fi','vinyl','piano']},
+  {id:'travel', name:'travel', emoji:'✈️', kw:['travel','trip','country','abroad','flight','backpack','adventure','explore','japan','paris','beach','mountain']},
+  {id:'art', name:'art', emoji:'🎨', kw:['art','paint','draw','sketch','museum','gallery','design','aesthetic','sculpt','doodle']},
+  {id:'food', name:'food', emoji:'🍜', kw:['food','cook','bake','recipe','ramen','dessert','chef','restaurant','spicy','foodie','baking']},
+  {id:'books', name:'books', emoji:'📚', kw:['book','read','novel','story','author','poetry','writing','library','fantasy']},
+  {id:'films', name:'movies', emoji:'🎬', kw:['movie','film','cinema','show','series','anime','netflix','director']},
+  {id:'sports', name:'sports', emoji:'⚽', kw:['sport','gym','run','football','soccer','basketball','tennis','hike','workout','climb','dance']},
+  {id:'animals', name:'animals', emoji:'🐾', kw:['dog','cat','pet','animal','puppy','kitten','panda','bunny']},
+  {id:'games', name:'gaming', emoji:'🎮', kw:['game','gaming','minecraft','console','arcade','pixel','nintendo','playstation']},
+  {id:'nature', name:'nature', emoji:'🌿', kw:['nature','garden','plant','sunset','stars','ocean','forest','flower','stargaze']}
+];
+function pickInterests(n){ return INTEREST_POOL.slice().sort(()=>Math.random()-0.5).slice(0,n); }
+function matchedInterest(text){
+  const t=" "+text.toLowerCase()+" ";
+  return G.interests.find(i=>!G.found.has(i.id) && i.kw.some(k=>t.includes(k)));
+}
+
+/* ============================================================
+   DATE STAGES — coffee → walk → dessert, each its own backdrop.
+   ============================================================ */
+const STAGES = [
+  {id:'coffee', name:'Coffee', emoji:'☕', bg:'cafe',
+   intro:ch=>ch.name+" settles in across the cozy little cafe table."},
+  {id:'walk', name:'Walk', emoji:'🌳', bg:'park',
+   intro:ch=>"you and "+ch.name+" wander out for a walk through the park."},
+  {id:'dessert', name:'Dessert', emoji:'🍰', bg:'dessert',
+   intro:ch=>"you settle into a warm dessert spot to end the evening."}
+];
+
+/* ============================================================
+   RANDOM MID-DATE EVENTS — a little choose-your-response moment.
+   ============================================================ */
+const EVENTS = [
+  {q:"🧑‍🍳 the waiter appears: \"anything else for you two?\"",
+   choices:[
+     {t:"\"we're great, thank you!\"", delta:5, r:"aw, kind to the staff. that's attractive 😊", expr:'smile'},
+     {t:"ignore him, keep staring at your date", delta:-6, r:"...that was kinda rude to him, ngl.", expr:'unimpressed'},
+     {t:"\"get us the priciest thing you've got\"", delta:-2, r:"showing off already? jury's still out.", expr:'neutral'}]},
+  {q:"📱 your date's phone buzzes with a text.",
+   choices:[
+     {t:"\"go ahead and answer, no rush\"", delta:6, r:"considerate. it was nothing — you've got my attention.", expr:'smile'},
+     {t:"\"who's that? let me see\"", delta:-9, r:"whoa. we just met. big red flag.", expr:'annoyed'},
+     {t:"keep talking, unbothered", delta:2, r:"smooth, unbothered. okay, respect.", expr:'neutral'}]},
+  {q:"☔ it suddenly starts to drizzle outside.",
+   choices:[
+     {t:"offer them your jacket", delta:7, r:"okay that's actually really sweet 🥺", expr:'love'},
+     {t:"\"race you to cover!\"", delta:4, r:"haha okay that was fun, you dork 😄", expr:'smile'},
+     {t:"whine about your hair getting wet", delta:-5, r:"...it's a little rain. relax.", expr:'unimpressed'}]},
+  {q:"🐕 a cute dog trots up to your table.",
+   choices:[
+     {t:"gently pet it and smile", delta:6, r:"you're good with animals — green flag 🐾", expr:'love'},
+     {t:"shoo it away", delta:-9, r:"...you shooed the dog. i can't.", expr:'annoyed'},
+     {t:"\"is this YOUR dog? smooth setup\"", delta:2, r:"ha! no, but nice try, detective.", expr:'smile'}]},
+  {q:"🎶 a familiar song drifts through the speakers.",
+   choices:[
+     {t:"hum along, ask if they like it", delta:5, r:"ooh, taste. yeah i love this one.", expr:'smile'},
+     {t:"belt the completely wrong lyrics", delta:-2, r:"those are... not the words. at all 😂", expr:'neutral'},
+     {t:"say music is pointless", delta:-9, r:"wow. we might not be compatible.", expr:'annoyed'}]}
+];
+
+/* ============================================================
+   ACHIEVEMENTS — earned across the whole session.
+   ============================================================ */
+const ACHIEVEMENTS = [
+  {id:'first', name:'First Date', emoji:'☕', desc:'finish your first date'},
+  {id:'bhaji', name:'Bhaji Believer', emoji:'🧅', desc:'order the legendary onion bhaji'},
+  {id:'charmed', name:'Heartthrob', emoji:'💘', desc:'fully charm a date'},
+  {id:'krishna', name:'Survived Krishna', emoji:'😈', desc:'finish a Krishna-mode date'},
+  {id:'diamond', name:'Diamond Hands', emoji:'💎', desc:'win on Hard mode'},
+  {id:'polyglot', name:'Lost in Translation', emoji:'🗺️', desc:'get grilled in another language'},
+  {id:'soulmate', name:'Soulmate Radar', emoji:'💡', desc:"find all of a date's hidden interests"},
+  {id:'rizzler', name:'Certified Rizzler', emoji:'🔥', desc:'score 200+ on a single date'}
+];
+const ACH_MAP = Object.fromEntries(ACHIEVEMENTS.map(a=>[a.id,a]));
+const ACH_EARNED = new Set(); // persists across dates this session
+function grantAch(id){ if(!ACH_EARNED.has(id) && G){ ACH_EARNED.add(id); G.newAch.push(id); SFX.ach(); } }
+
+/* ============================================================
+   KRISHNA MODE EXTRAS — foreign-language ambushes + food hatred.
+   ============================================================ */
+const KRISHNA_QUESTIONS = [
+  {lang:'Hindi', q:"तुम्हें कौन सा रंग पसंद है? जल्दी बताओ!", gloss:"(what's your favourite colour? quick!)"},
+  {lang:'Chinese', q:"你最喜欢吃什么？快回答我！", gloss:"(what do you like to eat? answer me!)"},
+  {lang:'Japanese', q:"あなたの誕生日はいつですか？", gloss:"(when is your birthday?)"},
+  {lang:'Korean', q:"제일 좋아하는 계절이 뭐예요?", gloss:"(what's your favourite season?)"},
+  {lang:'Tamil', q:"உங்களுக்கு பிடித்த இடம் எது?", gloss:"(what's your favourite place?)"},
+  {lang:'French', q:"Quel est ton plus grand rêve, hein?", gloss:"(what's your biggest dream, huh?)"}
+];
+const KRISHNA_WRONG = [
+  "❌ WRONG. obviously. how do you not know that.",
+  "❌ nope, that's not it at all. unbelievable.",
+  "❌ incorrect! everyone knows that one.",
+  "❌ wow, wrong again. we are NOT compatible."];
+const KRISHNA_FOOD_HATE = [
+  "ew, why would you order me THAT 🤢",
+  "i hate this. and i hate that you chose it.",
+  "did you even ask what i like? clearly not.",
+  "wrong order. everything you do is wrong today.",
+  "i'm allergic. and offended. mostly offended."];
+
+/* ============================================================
+   READ-THE-ROOM — a subtle mood tell before your next line.
+   ============================================================ */
+const TELLS = {
+  love:["they're leaning in, hanging on your every word 💗","glowing — you've got their full attention ✨"],
+  smile:["relaxed and smiling, into the conversation 😊","playing with their straw, enjoying this ☕"],
+  neutral:["polite but hard to read — keep them interested 😐","glancing around the cafe, waiting for a spark 👀"],
+  unimpressed:["sneaking looks at their phone... you're losing them 📱","arms crossed, unconvinced — turn it around 😕"],
+  annoyed:["leaning back, ready to bolt — recover fast! 😤","frowning at their drink; one more slip and it's over ⚠️"]
+};
+function tellFor(expr){ return pick(TELLS[expr]||TELLS.neutral); }
+
 /* ============================================================
    SCREEN MANAGEMENT
    ============================================================ */
@@ -1227,6 +1550,23 @@ function buildTitle(){
   drawSprite($('mascot'),'mascot',7);
   drawSprite($('btnNewIcon'),'chai',5);
   drawSprite($('btnHowIcon'),'mascot',5);
+  // ---- cozy cafe scene: little 8-bit people sitting at tables ----
+  const scene=$('cafescene');
+  const seats=[
+    {key:'her_easy',expr:'smile'}, {key:'him_easy',expr:'neutral'},
+    {key:'her_med',expr:'love'},   {key:'him_hard',expr:'neutral'},
+    {key:'her_krishna',expr:'smile'}
+  ];
+  seats.forEach((s,i)=>{
+    const table=document.createElement('div'); table.className='cafeseat';
+    table.style.animationDelay=(i*0.32)+'s';
+    const cv=document.createElement('canvas');
+    drawBust(cv, s.key, s.expr, 4, {bg:'cafe'});
+    const top=document.createElement('canvas'); top.className='tabletop';
+    drawSprite(top, i%2?'chai':'matcha', 4);
+    table.append(cv, top);
+    scene.appendChild(table);
+  });
   // floating sparkles
   const sw=$('signwrap');
   [['-30px','10%'],['top','88%'],['40%','-24px'],['70%','102%']].forEach(pos=>{
@@ -1266,21 +1606,51 @@ function refreshPreview(){
 let G = null;
 const LEADERBOARD = []; // in-memory, no localStorage
 
+/* ---------- animated bust (blink + idle sway), rAF-driven ---------- */
+let bustRAF=null, bustT=0;
+function currentBg(){ return (G && STAGES[G.stage]) ? STAGES[G.stage].bg : 'cafe'; }
+function startBustAnim(){
+  stopBustAnim();
+  (function frame(){
+    if(!G || G.over){ bustRAF=null; return; }
+    bustT++;
+    const swayX = (Math.sin(bustT/42)>0.55)?1:0;        // tiny idle lean
+    const blink = (bustT % 150) < 6;                     // occasional blink
+    drawBust($('charcv'), G.charKey, G.curExpr, 11, {bg:currentBg(), swayX, blink});
+    bustRAF=requestAnimationFrame(frame);
+  })();
+}
+function stopBustAnim(){ if(bustRAF){ cancelAnimationFrame(bustRAF); bustRAF=null; } }
+
 function startDate(){
+  SFX.resume();
   const name = ($('pname').value.trim() || 'Player 1').slice(0,14);
   const key = curCharKey(), ch = CHARS[key], d = DIFF[SEL.diff];
+  const nInterests = SEL.diff==='krishna' ? 3 : 2;
   G = {pname:name, charKey:key, target:SEL.target, diff:SEL.diff,
-    vibe:d.start, turn:0, cap:d.cap, over:false, busy:false,
-    orderingBonus:0, ordersDone:0, round2Fired:false,
-    history:[], curExpr:'neutral'};
+    vibe:d.start, over:false, busy:true,
+    stage:0, stageTurn:0, totalTurns:0,
+    interests:pickInterests(nInterests), found:new Set(), combo:0,
+    orderingBonus:0, ordersDone:0, newAch:[], history:[],
+    curExpr:'neutral', krishnaPending:false, maxed:false};
+  const nr = scoreName(name);
+  G.vibe = Math.max(0, Math.min(100, G.vibe + nr.bonus));
   $('chatlog').innerHTML='';
   $('charname').textContent = ch.name.toUpperCase();
-  updateHud(); updateFace('neutral');
+  updateFace('neutral'); updateHud();
+  setInput(false);
   show('game');
+  SFX.startAmbient();
+  startBustAnim();
   addBub('sys', ch.name+" slides into the seat across from you. don't fumble.");
-  setTimeout(()=>{ addBub('them', greet(ch)); }, 500);
-  // Round 1 ordering on sit-down
-  setTimeout(()=>openMenu(1), 1200);
+  setTimeout(()=>{
+    typingThen('them', greet(ch), 650, ()=>{
+      setTimeout(()=>{
+        applyExpr(nr.expr);
+        typingThen('them', nr.line, 550, ()=>{ updateHud(); enterStage(0, true); }, nr.bonus);
+      }, 350);
+    });
+  }, 500);
 }
 function greet(ch){
   const g={Hana:"hi! ooh you actually sat down, brave 😄 i'm Hana.",
@@ -1298,13 +1668,20 @@ function updateHud(){
   const v=Math.round(G.vibe);
   $('vibefill').style.width=v+'%';
   $('vibetxt').textContent=v;
-  $('turns').textContent='TURN '+Math.min(G.turn+1,G.cap)+'/'+G.cap;
+  const st=STAGES[G.stage], per=DIFF[G.diff].stageTurns;
+  $('turns').textContent=st.emoji+' '+st.name.toUpperCase()+' '+Math.min(G.stageTurn+1,per)+'/'+per;
 }
 const MOODS={love:'💖 charmed',smile:'😊 into it',neutral:'☕ vibing',unimpressed:'😐 unsure',annoyed:'😤 not feeling it'};
 function updateFace(expr){
   G.curExpr=expr;
-  drawBust($('charcv'), G.charKey, expr, 11);
+  drawBust($('charcv'), G.charKey, expr, 11, {bg:currentBg()});
   $('charmood').textContent=MOODS[expr]||MOODS.neutral;
+  $('tell').textContent='👁 '+tellFor(expr);
+}
+function applyExpr(expr){
+  updateFace(expr);
+  if(expr==='love'){ SFX.love(); floaties('heart'); }
+  else if(expr==='annoyed' || expr==='unimpressed'){ SFX.bad(); }
 }
 
 function addBub(kind, text, delta){
@@ -1319,6 +1696,20 @@ function addBub(kind, text, delta){
   }
   $('chatlog').appendChild(b);
   $('chatlog').scrollTop=$('chatlog').scrollHeight;
+}
+
+/* ---------- "Priya is typing…" indicator ---------- */
+function showTyping(){
+  if($('typing')) return;
+  const t=document.createElement('div'); t.className='bub them typing'; t.id='typing';
+  t.innerHTML=CHARS[G.charKey].name+' is typing<span class="td">.</span><span class="td">.</span><span class="td">.</span>';
+  $('chatlog').appendChild(t); $('chatlog').scrollTop=$('chatlog').scrollHeight;
+  SFX.type();
+}
+function hideTyping(){ const t=$('typing'); if(t) t.remove(); }
+function typingThen(kind, text, delay, cb, delta){
+  showTyping();
+  setTimeout(()=>{ hideTyping(); addBub(kind, text, delta); SFX.recv(); if(cb) cb(); }, delay);
 }
 
 function floaties(kind){
@@ -1341,34 +1732,76 @@ async function sendLine(){
   const inp=$('chatin'); const text=inp.value.trim();
   if(!text) return;
   inp.value=''; G.busy=true; setInput(false);
+  SFX.send();
+
+  // Krishna ambush follow-up: your previous foreign question means this
+  // answer is doomed no matter what you say.
+  if(G.krishnaPending){
+    G.krishnaPending=false;
+    addBub('you', text);
+    G.stageTurn++; G.totalTurns++;
+    const dmg = -(14 + Math.floor(Math.random()*8));
+    applyDelta(dmg);
+    applyExpr('annoyed');
+    typingThen('them', pick(KRISHNA_WRONG), 700, ()=>{
+      updateHud();
+      if(checkEnd()) return;
+      nextTurnOrStage();
+    }, dmg);
+    return;
+  }
+
   // Krishna mode: the game hijacks what you actually say.
   let shown = text, hijacked = false;
-  if(G.diff==='krishna' && Math.random()<0.5){
-    shown = krishnaHijack(text); hijacked = true;
-  }
+  if(G.diff==='krishna' && Math.random()<0.5){ shown = krishnaHijack(text); hijacked = true; }
   addBub('you', shown);
   if(hijacked) addBub('sys', '😈 Krishna hijacked your message!');
-  G.turn++;
+  G.stageTurn++; G.totalTurns++;
+
+  // hidden-interest match → combo bonus + a "found something they love" cue
+  let comboBonus = 0;
+  const hit = (!hijacked) && matchedInterest(shown);
+  if(hit){
+    G.found.add(hit.id); G.combo++;
+    comboBonus = 6 + G.combo*2;
+    addBub('sys', '💡 you found something they love — '+hit.emoji+' '+hit.name+'!');
+    SFX.pop();
+    if(G.found.size>=G.interests.length) grantAch('soulmate');
+  }
+
+  showTyping();
   const res = await judge(shown, G.charKey, G.diff, G.history);
+  hideTyping();
   // Krishna mode: the date sometimes glitches into Chinese.
-  if(G.diff==='krishna' && Math.random()<0.4){ res.reply = pick(CHINESE_REPLIES); }
+  if(G.diff==='krishna' && Math.random()<0.35){ res.reply = pick(CHINESE_REPLIES); }
   G.history.push({role:'user',content:shown});
   G.history.push({role:'assistant',content:res.reply});
   if(G.history.length>16) G.history=G.history.slice(-16);
-  applyDelta(res.delta);
-  updateFace(res.expression);
-  addBub('them', res.reply, res.delta);
-  if(res.expression==='love') floaties('heart');
+  const delta = res.delta + comboBonus;
+  applyDelta(delta);
+  applyExpr(res.expression);
+  addBub('them', res.reply, delta);
+  if(G.vibe>=100 && !G.maxed){
+    G.maxed=true; grantAch('charmed');
+    addBub('sys', '💖 the vibe is MAXED — hold it to the end!');
+  }
   updateHud();
   if(checkEnd()) return;
-  // Round 2 dessert after ~4 player messages
-  if(!G.round2Fired && G.turn>=4){
-    G.round2Fired=true;
-    setTimeout(()=>openMenu(2), 600);
+
+  // Krishna foreign-language ambush — sets up next line to fail
+  if(G.diff==='krishna' && Math.random()<0.45){
+    const kq = pick(KRISHNA_QUESTIONS);
+    grantAch('polyglot');
+    setTimeout(()=>{
+      applyExpr('unimpressed');
+      addBub('them', kq.q);
+      addBub('sys', '🗣️ '+kq.lang+' — '+kq.gloss+'  (answer… if you dare)');
+      G.krishnaPending=true;
+      G.busy=false; setInput(true);
+    }, 500);
     return;
   }
-  if(G.turn>=G.cap){ endDate('cap'); return; }
-  G.busy=false; setInput(true);
+  nextTurnOrStage();
 }
 function applyDelta(delta){ G.vibe=Math.max(0,Math.min(100,G.vibe+delta)); }
 function setInput(on){
@@ -1376,9 +1809,60 @@ function setInput(on){
   if(on) $('chatin').focus();
 }
 function checkEnd(){
-  if(G.vibe>=100){ endDate('win'); return true; }
   if(G.vibe<=0){ endDate('lose'); return true; }
   return false;
+}
+
+/* ---------- stage flow: coffee → walk → dessert ---------- */
+function enterStage(idx, isFirst){
+  G.stage=idx; G.stageTurn=0;
+  G.busy=true; setInput(false);
+  const st=STAGES[idx], ch=CHARS[G.charKey];
+  if(!isFirst) addBub('sys', st.emoji+' '+st.intro(ch));
+  updateFace(G.curExpr); updateHud();
+  if(idx===0)      setTimeout(()=>openMenu(1), isFirst?700:500); // coffee: order
+  else if(idx===1) setTimeout(fireEvent, 650);                   // walk: random event
+  else if(idx===2) setTimeout(()=>openMenu(2), 650);             // dessert: order
+}
+function nextTurnOrStage(){
+  const per=DIFF[G.diff].stageTurns;
+  if(G.stageTurn>=per){
+    if(G.stage>=STAGES.length-1){
+      endDate(G.vibe<=0?'lose':((G.maxed||G.vibe>=60)?'win':'neutral'));
+      return;
+    }
+    enterStage(G.stage+1);
+    return; // enterStage manages input via its menu/event
+  }
+  G.busy=false; setInput(true);
+}
+
+/* ---------- random mid-date event ---------- */
+function fireEvent(){
+  if(G.over) return;
+  G.busy=true; setInput(false);
+  const ev=pick(EVENTS);
+  SFX.event();
+  $('eventq').textContent=ev.q;
+  const grid=$('eventchoices'); grid.innerHTML='';
+  ev.choices.forEach(c=>{
+    const b=document.createElement('button'); b.className='pixbtn eventbtn'; b.textContent=c.t;
+    b.onclick=()=>chooseEvent(c);
+    grid.appendChild(b);
+  });
+  $('eventboard').classList.add('open');
+}
+function chooseEvent(c){
+  $('eventboard').classList.remove('open');
+  SFX.pop();
+  addBub('you', c.t);
+  applyDelta(c.delta);
+  applyExpr(c.expr);
+  updateHud();
+  typingThen('them', c.r, 650, ()=>{
+    if(checkEnd()) return;
+    G.busy=false; setInput(true);
+  }, c.delta);
 }
 
 /* ============================================================
@@ -1480,20 +1964,29 @@ function openMenu(round){
     grid.appendChild(b);
   });
   $('menuboard').classList.add('open');
+  SFX.pop();
 }
 
 async function chooseItem(item){
   $('menuboard').classList.remove('open');
+  SFX.pop();
   G.ordersDone++;
-  G.orderingBonus += item.pts;
-  applyDelta(item.pts);
+  if(item.id==='bhaji') grantAch('bhaji');
+  let pts=item.pts, r;
+  if(G.diff==='krishna'){
+    // Krishna troll: every single order makes them hate you more.
+    pts = -(6 + Math.floor(Math.random()*8));
+    r = {reply:pick(KRISHNA_FOOD_HATE), expression:'annoyed'};
+  } else {
+    r = await orderReaction(item, G.charKey);
+  }
+  G.orderingBonus += pts;
+  applyDelta(pts);
   updateHud();
   addBub('sys', 'You ordered '+item.name+' for '+CHARS[G.charKey].name+'.');
-  const r = await orderReaction(item, G.charKey);
-  updateFace(r.expression);
-  addBub('them', r.reply);
-  if(item.id==='bhaji'){ floaties('heart'); setTimeout(()=>floaties('spark'),200); }
-  else if(r.expression==='love') floaties('heart');
+  applyExpr(r.expression);
+  addBub('them', r.reply, pts);
+  if(item.id==='bhaji' && G.diff!=='krishna'){ floaties('heart'); setTimeout(()=>floaties('spark'),200); }
   if(checkEnd()) return;
   G.busy=false; setInput(true);
 }
@@ -1509,34 +2002,58 @@ const RANKS=[
   {min:-999,tag:'💀 Fumbled the Bag',blurb:"oof. regroup, get a chai, try again champ."}];
 
 function endDate(outcome){
+  if(G.over) return;
   G.over=true; G.busy=true; setInput(false);
+  stopBustAnim();
   $('menuboard').classList.remove('open');
+  $('eventboard').classList.remove('open');
   const d=DIFF[G.diff];
   const finalVibe=Math.round(G.vibe);
   const won = outcome==='win';
+  outcome==='lose' ? SFX.lose() : SFX.win();
   const mult=d.mult;
-  const speedBonus = won ? Math.round((G.cap-G.turn)*8*mult) : 0;
   const base = Math.round(finalVibe*mult);
-  const score = Math.max(0, base + speedBonus + G.orderingBonus);
+  const interestBonus = G.found.size*15;
+  const score = Math.max(0, base + G.orderingBonus + interestBonus);
+  // achievements earned at the finish line
+  grantAch('first');
+  if(won){ grantAch('charmed'); if(G.diff==='hard') grantAch('diamond'); }
+  if(G.diff==='krishna') grantAch('krishna');
+  if(score>=200) grantAch('rizzler');
   const expr = won?'love':(outcome==='lose'?'annoyed':(finalVibe>=55?'smile':'unimpressed'));
-  drawBust($('resultcv'), G.charKey, expr, 11);
+  drawBust($('resultcv'), G.charKey, expr, 11, {bg:currentBg()});
   const ch=CHARS[G.charKey];
   const outMsg = won?(ch.name+" is charmed 💘")
     : outcome==='lose'?(ch.name+" walked out 🚪")
-    : ("time's up — the date ends ⏳");
-  $('outcomehead').textContent = won?'CHARMED!':(outcome==='lose'?'WALKED OUT':"TIME'S UP");
+    : ("the date wraps up — not bad ⏳");
+  $('outcomehead').textContent = won?'CHARMED!':(outcome==='lose'?'WALKED OUT':"DATE OVER");
   $('outcometxt').textContent = outMsg;
   $('bigscore').textContent = score;
   const rank=RANKS.find(r=>score>=r.min);
   $('rank').textContent = rank.tag;
   $('scorebreak').innerHTML =
     "vibe "+finalVibe+" × "+mult+" = "+base+"<br>"
-    +(speedBonus?("speed bonus +"+speedBonus+"<br>"):"")
-    +"ordering bonus +"+G.orderingBonus+"<br>"
+    +"ordering bonus "+(G.orderingBonus>=0?'+':'')+G.orderingBonus+"<br>"
+    +(interestBonus?("interests found +"+interestBonus+"<br>"):"")
     +'<span style="color:var(--gold)">'+rank.blurb+'</span>';
+  renderAchList();
   LEADERBOARD.push({name:G.pname, score, target:G.target, difficulty:G.diff});
   LEADERBOARD.sort((a,b)=>b.score-a.score);
   show('result');
+}
+function renderAchList(){
+  const wrap=$('achrow'); wrap.innerHTML='';
+  if(!G.newAch.length){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  const head=document.createElement('div'); head.className='achhead'; head.textContent='ACHIEVEMENTS UNLOCKED';
+  wrap.appendChild(head);
+  const row=document.createElement('div'); row.className='achbadges';
+  G.newAch.forEach(id=>{
+    const a=ACH_MAP[id]; const el=document.createElement('div'); el.className='achbadge'; el.title=a.desc;
+    el.innerHTML='<span class="ache">'+a.emoji+'</span><span>'+a.name+'</span>';
+    row.appendChild(el);
+  });
+  wrap.appendChild(row);
 }
 
 /* ============================================================
@@ -1563,7 +2080,7 @@ function renderBoard(){
    EVENT WIRING
    ============================================================ */
 initSetup();
-$('btnNew').onclick=()=>{ show('setup'); };
+$('btnNew').onclick=()=>{ SFX.resume(); show('setup'); };
 $('btnHow').onclick=()=>$('howto').classList.add('open');
 $('btnHowClose').onclick=()=>$('howto').classList.remove('open');
 $('howto').onclick=e=>{ if(e.target===$('howto')) $('howto').classList.remove('open'); };
@@ -1573,6 +2090,7 @@ $('chatin').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefaul
 $('pname').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); startDate(); }});
 $('btnBoard').onclick=()=>{ renderBoard(); show('board'); };
 $('btnNext').onclick=()=>{ show('setup'); refreshPreview(); };
+$('mutebtn').onclick=()=>{ SFX.resume(); const m=SFX.toggle(); $('mutebtn').textContent=m?'🔇':'🔊'; };
 </script>
 </body>
 </html>
