@@ -10,8 +10,8 @@ with **zero build step**.
 
 - **Offline mode (default):** works fully with no setup — a built-in heuristic "judge"
   scores your lines in character.
-- **Live-AI mode (optional):** point it at a Cloudflare Worker to have Claude role-play
-  your date. Both paths are always kept working.
+- **Live-AI mode (optional):** point it at a Cloudflare Worker to have OpenAI's
+  `gpt-4o-mini` role-play your date. Both paths are always kept working.
 
 Strictly PG / wholesome by design: crude, creepy or desperate lines get shut down
 *in character* with a negative score.
@@ -31,15 +31,15 @@ That's it — the game is fully playable in offline mode.
 
 ## 2. (Optional) Enable live AI via Cloudflare Worker
 
-The Worker keeps your Anthropic API key server-side and proxies requests from the game.
+The Worker keeps your OpenAI API key server-side and proxies requests from the game.
 
 ```bash
 # install the Cloudflare CLI if you don't have it
 npm i -g wrangler
 
-wrangler login                          # authenticate with Cloudflare
-wrangler secret put ANTHROPIC_API_KEY   # paste your Anthropic API key when prompted
-wrangler deploy                         # deploy worker.js
+wrangler login                       # authenticate with Cloudflare
+wrangler secret put OPENAI_API_KEY   # paste your OpenAI API key when prompted
+wrangler deploy                      # deploy worker.js
 ```
 
 `wrangler deploy` prints your Worker URL, e.g.
@@ -72,7 +72,7 @@ transparently falls back to the offline judge, so it never breaks.
 | File            | Purpose                                                        |
 |-----------------|---------------------------------------------------------------|
 | `index.html`    | The entire game — self-contained, no build step.              |
-| `worker.js`     | Cloudflare module Worker that proxies to the Anthropic API.    |
+| `worker.js`     | Cloudflare module Worker that proxies to the OpenAI API (`gpt-4o-mini`). |
 | `wrangler.toml` | Worker config (`name`, `main`, `compatibility_date`).         |
 | `README.md`     | This file.                                                    |
 

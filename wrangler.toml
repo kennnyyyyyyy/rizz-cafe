@@ -1,3 +1,6 @@
 name = "rizz-cafe"
 main = "worker.js"
 compatibility_date = "2025-01-01"
+
+# Required secret (set via CLI, never commit it):
+#   wrangler secret put OPENAI_API_KEY

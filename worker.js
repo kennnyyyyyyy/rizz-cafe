@@ -1,5 +1,5 @@
 // Krishna's Rizz Cafe — Cloudflare module Worker (AI proxy)
-// Forwards the game's {system, messages} to the Anthropic Messages API,
+// Forwards the game's {system, messages} to the OpenAI Chat Completions API,
 // keeping the API key server-side. CORS-open so GitHub Pages can call it.
 
 const CORS = {
@@ -29,23 +29,23 @@ export default {
     if (!system || !Array.isArray(messages)) {
       return json({ error: 'expected { system, messages }' }, 400);
     }
-    if (!env.ANTHROPIC_API_KEY) {
-      return json({ error: 'ANTHROPIC_API_KEY not configured' }, 500);
+    if (!env.OPENAI_API_KEY) {
+      return json({ error: 'OPENAI_API_KEY not configured' }, 500);
     }
 
     try {
-      const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+      const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
-          'x-api-key': env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
+          'Authorization': `Bearer ${env.OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
+          model: 'gpt-4o-mini',
           max_tokens: 350,
-          system,
-          messages,
+          response_format: { type: 'json_object' },
+          // OpenAI takes the system prompt as a message, not a top-level field.
+          messages: [{ role: 'system', content: system }, ...messages],
         }),
       });
 

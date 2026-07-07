@@ -860,7 +860,7 @@ async function judge(text, charKey, diffKey, history){
       body:JSON.stringify({system:buildSystem(charKey,diffKey), messages})});
     if(!res.ok) throw new Error('bad status '+res.status);
     const data = await res.json();
-    let txt = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    let txt = (((data.choices||[])[0]||{}).message||{}).content||'';
     txt = txt.replace(/```json/gi,'').replace(/```/g,'').trim();
     const obj = JSON.parse(txt);
     let delta = Math.round(Number(obj.delta));
@@ -888,7 +888,7 @@ async function orderReaction(item, charKey){
         +"in-character line. Return ONLY JSON {\"reply\":string,\"expression\":\"love\"|\"smile\"|\"neutral\"|\"unimpressed\"|\"annoyed\"}."}]})});
     if(!res.ok) throw new Error('status');
     const data = await res.json();
-    let txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('').replace(/```json/gi,'').replace(/```/g,'').trim();
+    let txt=((((data.choices||[])[0]||{}).message||{}).content||'').replace(/```json/gi,'').replace(/```/g,'').trim();
     const o = JSON.parse(txt);
     return {reply:String(o.reply||canned.reply).slice(0,160), expression:clampExpr(o.expression)};
   }catch(e){ return canned; }
