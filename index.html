@@ -130,6 +130,21 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
 @keyframes twinkle{0%,100%{opacity:.15; transform:scale(.7)}50%{opacity:1; transform:scale(1.15)}}
 #titlefoot{position:absolute; bottom:14px; font-size:16px; color:rgba(43,29,14,.7); z-index:3;}
 
+#krishnaGuy{position:absolute; left:10px; bottom:0; z-index:4; pointer-events:none;
+  width:clamp(120px,16vw,205px); animation:kbob 2.4s ease-in-out infinite;
+  transform-origin:bottom center;}
+#krishnaGuy img{width:100%; height:auto; display:block; image-rendering:auto;
+  filter:drop-shadow(3px 4px 0 rgba(43,29,14,.32));}
+@keyframes kbob{0%,100%{transform:translateY(0) rotate(-2deg);}
+  50%{transform:translateY(-10px) rotate(2deg);}}
+.kbubble{position:absolute; top:-4px; left:50%; transform:translateX(-50%);
+  background:var(--cream); color:var(--ink); border:3px solid var(--ink);
+  box-shadow:2px 2px 0 var(--ink); font-family:'Press Start 2P',monospace;
+  font-size:7px; padding:6px 8px; white-space:nowrap; line-height:1.3; border-radius:3px;
+  animation:twinkle 2.6s ease-in-out infinite;}
+.kbubble::after{content:''; position:absolute; bottom:-9px; left:50%; transform:translateX(-50%);
+  border-left:6px solid transparent; border-right:6px solid transparent; border-top:9px solid var(--ink);}
+
 /* ---------- modal ---------- */
 #howto{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
   background:rgba(43,29,14,.6);}
@@ -316,11 +331,14 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
   #chatin{font-size:20px;}
   #cafescene{gap:8px; margin-top:18px;}
   #titlebtns{gap:16px; margin-top:34px;}
+  #krishnaGuy{width:clamp(88px,26vw,132px); left:2px;}
+  .kbubble{font-size:6px; padding:5px 6px;}
   body:has(#game.active){overflow:hidden;}
   body:has(#setup.active), body:has(#result.active), body:has(#board.active), body:has(#howto.open){overflow-y:auto;}
 }
 @media (max-height:520px){
   #cafescene{display:none;}
+  #krishnaGuy{width:96px;}
 }
 </style>
 </head>
@@ -354,6 +372,10 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
     <button class="crate" id="btnHow">HOW TO PLAY<canvas id="btnHowIcon"></canvas></button>
   </div>
   <div id="cafescene"></div>
+  <div id="krishnaGuy">
+    <div class="kbubble">the REAL Krishna 🙌</div>
+    <img src="krishna.png" alt="Krishna cheering" draggable="false">
+  </div>
   <div id="titlefoot">a cozy pixel charm game &bull; pass-and-play</div>
 </div>
 
