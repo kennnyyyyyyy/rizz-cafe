@@ -329,6 +329,7 @@ button{font-family:'Press Start 2P',monospace; cursor:pointer;}
         <button class="opt sel" data-d="easy">Easy 😊</button>
         <button class="opt" data-d="med">Medium 😏</button>
         <button class="opt" data-d="hard">Hard 😤</button>
+        <button class="opt" data-d="krishna">Krishna 😈</button>
       </div>
     </div>
     <div id="previewwrap">
@@ -416,7 +417,8 @@ const DP = {
   'w':'#fff3d6','u':'#ffffff','c':'#f4e4c1','t':'#faeecb',
   'p':'#f2a0b4','P':'#e07c96','b':'#8ec4d6','z':'#b5e3ee',
   's':'#5b3a22','S':'#3a2417','m':'#a9663a','e':'#8a5a2c','n':'#5a3210',
-  'r':'#e8733a','d':'#7a2c08','i':'#e7c48a','f':'#7a4d2a'
+  'r':'#e8733a','d':'#7a2c08','i':'#e7c48a','f':'#7a4d2a',
+  'Y':'#ffe9a3','$':'#b8860b'
 };
 
 const SPRITES = {
@@ -548,6 +550,168 @@ const SPRITES = {
     ".cwwwwc.",
     ".cccccc.",
     "..cccc.."],
+  pizza:[
+    "...y....",
+    "..yry...",
+    "..yrry..",
+    ".yrdrr..",
+    ".yrrrd..",
+    "yrdrrry.",
+    "OOOOOOO.",
+    "........"],
+  burger:[
+    ".OOOOOO.",
+    "OoyoyoyO",
+    "gggggggg",
+    "rrrrrrrr",
+    "nnnnnnnn",
+    "yyyyyyyy",
+    ".OOOOOO.",
+    "........"],
+  donut:[
+    "..ppp...",
+    ".pPuPp..",
+    "pP...Pp.",
+    "pp...pp.",
+    "pP...Pp.",
+    ".pPuPp..",
+    "..ppp...",
+    "........"],
+  taco:[
+    ".OOOOOO.",
+    "OggrrggO",
+    "OgrnrgO.",
+    "OyyyyyO.",
+    "OOOOOOO.",
+    "........",
+    "........",
+    "........"],
+  fries:[
+    ".y.y.y..",
+    "yy.y.yy.",
+    "yyyyyyy.",
+    ".rrrrrr.",
+    ".rwwwwr.",
+    ".rwwwwr.",
+    ".rrrrrr.",
+    "........"],
+  ramen:[
+    "........",
+    ".oiiiio.",
+    ".iuiuii.",
+    ".rnrnrr.",
+    "buuuuub.",
+    "buuuuub.",
+    ".bbbbb..",
+    "........"],
+  dumpling:[
+    "........",
+    "..ccc...",
+    ".ccccc..",
+    "cccccccc",
+    "cKcKcKcK",
+    "cccccccc",
+    ".cccccc.",
+    "........"],
+  sushi:[
+    "........",
+    ".KKKKKK.",
+    ".uuuuuu.",
+    ".uroru..",
+    ".urrru..",
+    ".uuuuuu.",
+    ".KKKKKK.",
+    "........"],
+  boba:[
+    "..c.....",
+    ".ccu....",
+    ".uuuu...",
+    ".uiiiu..",
+    ".uiiiu..",
+    ".uKiKu..",
+    ".uKKKu..",
+    ".uuuu..."],
+  apple:[
+    "...g....",
+    "...s....",
+    ".rr.rr..",
+    "rrrrrrr.",
+    "rrrrrrr.",
+    "rrrrrrr.",
+    ".rrrrr..",
+    "..rrr..."],
+  cake:[
+    "...r....",
+    "..rrr...",
+    ".wwwww..",
+    ".pPpPp..",
+    ".wwwww..",
+    ".ppppp..",
+    ".wwwww..",
+    "........"],
+  croissant:[
+    "........",
+    "..OOO...",
+    ".OyyyO..",
+    "OyyyyyO.",
+    "OyyyyyO.",
+    ".OyyyO..",
+    "..OOO...",
+    "........"],
+  goldcake:[
+    "..yyyy..",
+    ".yYYYYy.",
+    ".wwwww..",
+    ".yYyYy..",
+    ".wwwww..",
+    ".yYYYy..",
+    ".wwwww..",
+    "........"],
+  caviar:[
+    "........",
+    ".KKKKKK.",
+    "KSKSKSKS",
+    "KKKKKKKK",
+    ".iiiiii.",
+    ".iwwwwi.",
+    ".iiiiii.",
+    "........"],
+  diamond:[
+    "..u.....",
+    ".zbz....",
+    "zzbbz...",
+    "bzbbzb..",
+    ".bzzb...",
+    "..bb....",
+    "...b....",
+    "........"],
+  champagne:[
+    "..z.z...",
+    "...z....",
+    ".uuuuu..",
+    ".uyyyu..",
+    "..uyu...",
+    "...u....",
+    "..uuu...",
+    ".uuuuu.."],
+  roses:[
+    ".p.p.p..",
+    "pPpPpP..",
+    ".pPpPp..",
+    ".gGgGg..",
+    "..gGg...",
+    "..gGg...",
+    ".ggGgg..",
+    "........"],
+  moneybag:[
+    "...ss...",
+    "..s..s..",
+    ".SSSSSS.",
+    "SyYYYYyS",
+    "SyY$$YyS",
+    "SyYYYYyS",
+    ".SSSSSS.",
+    "........"],
   leaf:[
     "...gg...",
     "..gggg..",
@@ -599,90 +763,123 @@ function drawSprite(cv, key, scale){ drawRows(cv, SPRITES[key], DP, scale); }
    + swappable eye/mouth expression overlays (5 states).
    ============================================================ */
 const BUST_BG = [
-  "WWWWWWWWWWWWWWWW",
-  "WFFFFFFFFFFFFFFW",
-  "WFBBBBBBBBBBBBFW",
-  "WFBBLBBBBBBBBBFW",
-  "WFBBBBBBBBBBPQFW",
-  "WFBBBBBBBBBPPPFW",
-  "WFBBBBBBBBQPPPFW",
-  "WFFFFFFFFFFQPQFW",
-  "WWWWWWWWWWWQPQWW",
-  "TTTTTTTTTTTQPTTT",
-  "DDDDDDDDDDDDDDDD",
-  "TTTTTTTTTTTTTTTT",
-  "DDDDDDDDDDDDDDDD",
-  "TTTTTTTTTTTTTTTT",
-  "DDDDDDDDDDDDDDDD",
-  "TTTTTTTTTTTTTTTT"];
+  "WWWWWWWWWWWWWWWWWWWW",
+  "WWFFFFFFFFWWWWWWWWWW",
+  "WWFBBBBBBFWWWWPQPWWW",
+  "WWFBBLBBBFWWWPPPPPWW",
+  "WWFBBBBBBFWWWPQPQPWW",
+  "WWFBBBBBBFWWWWPQPWWW",
+  "WWFFFFFFFFWWWWWQPWWW",
+  "WWWWWWWWWWWWWWWQPWWW",
+  "WWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWW",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTTTTTT"];
 const BUST_BG_PAL = {
-  '.':null,'W':'#e9d3a6','F':'#7a4d2a','B':'#8ec4d6','b':'#8ec4d6',
+  '.':null,'W':'#efd9ad','F':'#7a4d2a','B':'#8ec4d6','b':'#8ec4d6',
   'L':'#dff2f8','P':'#6a8f3c','Q':'#4d6b2a','T':'#7a4d2a','D':'#5b3a22'};
 
 // body silhouettes — 'k' skin,'j' skin-shadow,'H' hair,'h' hair-hi,'C' clothes,'V' clothes-shadow
 const BODY_HER = [
-  "................",
-  "....HHHHHH......",
-  "...HHHHHHHH.....",
-  "..HHHkkkkHHH....",
-  "..HHkkkkkkHH....",
-  "..Hhkkkkkkjh....",
-  "..Hhkkkkkkjh....",
-  "..Hhkkkkkkjh....",
-  "...hkkkkkkh.....",
-  "....kkjjkk......",
-  "...CCCCCCCC.....",
-  "..CCCCCCCCCC....",
-  ".CCCCCVCCVCCC...",
-  ".CCCCCCCCCCCC...",
-  ".CCCCCCCCCCCC...",
-  ".CCCCCCCCCCCC..."];
+  "....................",
+  ".......HHHHHH.......",
+  ".....HHHHHHHHHH.....",
+  "....HHHHHHHHHHHH....",
+  "...HHHhhHHHHHHHHH...",
+  "..HHHHHHHHHHHHHHHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "...HkkkkkkkkkkkkH...",
+  "....HkkkkkkkkkkH....",
+  "....HHkkkkkkkkHH....",
+  "....HH.kkkk.HH......",
+  ".....CCCCCCCC.......",
+  "....CCCCCCCCCCCC....",
+  "...CCCCCCCCCCCCCC...",
+  "...CCCCCVVVVCCCCC...",
+  "..CCCCCCCCCCCCCCCC..",
+  "..CCCCCCCCCCCCCCCC.."];
 const BODY_HIM = [
-  "................",
-  "....HHHHHH......",
-  "...HHHHHHHH.....",
-  "...HkkkkkkH.....",
-  "...kkkkkkkk.....",
-  "...kkkkkkkk.....",
-  "...kkkkkkkk.....",
-  "...jkkkkkkj.....",
-  "....kkkkkk......",
-  ".....kkkk.......",
-  "...CCCCCCCC.....",
-  "..CCCCCCCCCC....",
-  ".CCCCCVCCVCCC...",
-  ".CCCCCCCCCCCC...",
-  ".CCCCCCCCCCCC...",
-  ".CCCCCCCCCCCC..."];
+  "....................",
+  ".....HHHHHHHH.......",
+  "....HHHHHHHHHH......",
+  "...HHHHHHHHHHHH.....",
+  "...HHHHHHHHHHHHH....",
+  "..HHHkkkkkkkkkHH....",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "..HHkkkkkkkkkkkkHH..",
+  "...HkkkkkkkkkkkkH...",
+  "....kkkkkkkkkkkk....",
+  ".....kkkkkkkkkk.....",
+  ".......kkkkkk.......",
+  "......CCCCCCCC......",
+  "....CCCCCCCCCCCC....",
+  "..CCCCCCCCCCCCCCCC..",
+  "..CCCCCCVVVVCCCCCC..",
+  "..CCCCCCCCCCCCCCCC..",
+  "..CCCCCCCCCCCCCCCC.."];
 
-// sparse expression overlays painted over the skin face.
-// origin x=3,y=4; '.' = keep underlying pixel. E=eye/line, R=blush, w=teeth
+// expression overlays painted over the skin face at origin (0,6).
+// '.' = keep underlying pixel. E=eye/line/mouth, w=eye-shine/teeth, R=blush
 const EXPR = {
   neutral:[
-    "........",
-    "..E..E..",
-    "........",
-    "...EE..."],
+    "....................",
+    "......EE....EE......",
+    "......Ew....Ew......",
+    "......EE....EE......",
+    "....................",
+    ".........EE.........",
+    "...................."],
   smile:[
-    "........",
-    "..E..E..",
-    "........",
-    "..EwwE.."],
+    "....................",
+    "......EE....EE......",
+    "......Ew....Ew......",
+    "......EE....EE......",
+    "....................",
+    "........E..E........",
+    ".........EE........."],
   love:[
-    "........",
-    "..E..E..",
-    "R......R",
-    "..EwwE.."],
+    "....................",
+    "......EE....EE......",
+    "......Ew....Ew......",
+    "....RREE....EERR....",
+    "....RR........RR....",
+    ".......EwwwwE.......",
+    "........EEEE........"],
   unimpressed:[
-    "..E..E..",
-    "..E..E..",
-    "........",
-    "..EEEE.."],
+    "....................",
+    "......EE....EE......",
+    "......EE....EE......",
+    "....................",
+    "....................",
+    "........EEEE........",
+    "...................."],
   annoyed:[
-    ".E....E.",
-    "..E..E..",
-    "..EEEE..",
-    ".E....E."]};
+    ".....E........E.....",
+    "......EE....EE......",
+    "......EE....EE......",
+    "....................",
+    "....................",
+    ".........EE.........",
+    "........E..E........"]};
 
 function paint(ctx, rows, pal, scale, ox, oy){
   rows.forEach((row,y)=>[...row].forEach((ch,x)=>{
@@ -691,13 +888,13 @@ function paint(ctx, rows, pal, scale, ox, oy){
 }
 function drawBust(cv, charKey, expr, scale){
   const ch = CHARS[charKey];
-  cv.width = 16*scale; cv.height = 16*scale;
+  cv.width = 20*scale; cv.height = 22*scale;
   const c = cv.getContext('2d'); c.imageSmoothingEnabled=false;
   paint(c, BUST_BG, BUST_BG_PAL, scale, 0, 0);
   const bodyPal = {'.':null,'k':ch.skin,'j':ch.skinS,'H':ch.hair,'h':ch.hairH,'C':ch.cloth,'V':ch.clothS};
   paint(c, ch.target==='her'?BODY_HER:BODY_HIM, bodyPal, scale, 0, 0);
-  const exPal = {'.':null,'E':'#2b1d0e','R':'#f2758f','w':'#fff3d6'};
-  paint(c, EXPR[expr]||EXPR.neutral, exPal, scale, 3, 4);
+  const exPal = {'.':null,'E':'#3a2417','R':'#f2758f','w':'#ffffff'};
+  paint(c, EXPR[expr]||EXPR.neutral, exPal, scale, 0, 6);
 }
 
 /* ============================================================
@@ -727,7 +924,15 @@ const CHARS = {
   him_hard:{name:"Kai",target:'him',
     skin:'#ecccb0',skinS:'#cba989',hair:'#15110d',hairH:'#2c2318',cloth:'#2b2b33',clothS:'#181820',
     desc:"aloof musician, hates try-hards",
-    persona:"Kai — aloof indie musician, hates try-hards and clichés, drawn to authenticity, art, curiosity and real thoughts."}
+    persona:"Kai — aloof indie musician, hates try-hards and clichés, drawn to authenticity, art, curiosity and real thoughts."},
+  her_krishna:{name:"Priya",target:'her',
+    skin:'#eabf94',skinS:'#c99a6c',hair:'#2a1d3a',hairH:'#4a3560',cloth:'#7b3fb0',clothS:'#57277f',
+    desc:"chaos incarnate — Krishna is trolling you",
+    persona:"Priya — chaotic and unpredictable; the game itself sabotages you, so nothing you say comes out right."},
+  him_krishna:{name:"Arjun",target:'him',
+    skin:'#d79c6a',skinS:'#b47c4c',hair:'#1a2140',hairH:'#33406e',cloth:'#2f6f8f',clothS:'#1f4f66',
+    desc:"pure trouble — Krishna is sabotaging you",
+    persona:"Arjun — mischievous menace; the game itself twists your words, so you can never say what you mean."}
 };
 /* ============================================================
    DIFFICULTY TUNING
@@ -735,7 +940,8 @@ const CHARS = {
 const DIFF = {
   easy:{start:42,cap:10,mult:1,posScale:1.15,negScale:0.6,label:"Easy"},
   med:{start:32,cap:8,mult:1.6,posScale:1.0,negScale:1.0,label:"Medium"},
-  hard:{start:22,cap:7,mult:2.4,posScale:0.8,negScale:1.25,label:"Hard"}
+  hard:{start:22,cap:7,mult:2.4,posScale:0.8,negScale:1.25,label:"Hard"},
+  krishna:{start:35,cap:9,mult:3,posScale:1.0,negScale:1.15,label:"Krishna"}
 };
 
 /* ============================================================
@@ -788,11 +994,59 @@ const REPLIES = {
     pos:["...huh. that was almost real. i like real.","okay, you didn't bore me. rare.","that's got some soul to it. continue.","fine. that resonated. slightly."],
     neu:["hm.","...and?","the acoustics in here beat most lines i hear."],
     neg:["try-hard. i can hear it from here.","that's noise, not music.","no. the opposite of interesting."],
-    shut:["gross. we're done.","that's cheap. i'm leaving.","no. don't ever open with that."]}
+    shut:["gross. we're done.","that's cheap. i'm leaving.","no. don't ever open with that."]},
+  her_krishna:{
+    pos:["wait, that one actually landed?? weird, i'll take it 😄","ok despite everything that was kinda cute","huh, a real one slipped through! nice"],
+    neu:["um. okay. sure? go on i guess","that... came out strange but continue","the vibes are chaotic but i'm listening"],
+    neg:["did you MEAN to say that?? 😭","yikes, that got scrambled bad","oof. i don't think that's what you wanted to say"],
+    shut:["okay that's just too much, be normal 😬","nope, whatever that was, no.","the chaos is not it, buddy."]},
+  him_krishna:{
+    pos:["haha okay THAT survived the chaos, respect","alright that one was actually solid somehow","ngl that slipped through and it worked"],
+    neu:["uh... sure man, keep going?","that came out sideways but ok","wild energy, i'm here for it i think"],
+    neg:["bro what did you just say 😭","that got fully scrambled lol","yeah that ain't what you meant, i can tell"],
+    shut:["nah that's too cursed, we're done","okay no, reset yourself.","that was chaos gone wrong. bye."]}
 };
 
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 function has(t, list){ return list.some(w=>t.includes(w)); }
+
+/* ============================================================
+   KRISHNA MODE — the game trolls the player by hijacking their
+   messages with cringe, or making the date reply in Chinese.
+   ============================================================ */
+const CRINGE_LINES = [
+  "do you like mudkips? i have 47 pokemon cards at home",
+  "my mom says i'm very handsome and also very tall (i am not tall)",
+  "i've never lost a thumb war. wanna find out? uwu",
+  "i named my left shoe kevin. kevin says hi.",
+  "i can recite the entire bee movie script if you're free later",
+  "i think about the roman empire like six times a day",
+  "wanna watch me eat an entire onion bhaji in one bite",
+  "i put ketchup on my cereal this morning. unbothered.",
+  "i practiced this conversation with my cat for two hours"];
+const CRINGE_SUFFIX = [
+  " ...uwu",
+  " (i typed this with my eyes closed)",
+  " ...haha unless? 👉👈",
+  " — sent from my nintendo ds",
+  " ...is what my imaginary friend told me to say"];
+const GIBBERISH = [
+  "asdkjhaskdjh RIZZ????",
+  "HELLO FELLOW HUMAN i am normal",
+  "beep boop i am definitely not nervous",
+  "aaaaaa okay that was supposed to be smooth"];
+const CHINESE_REPLIES = [
+  "什么？我听不懂 (what? i don't understand)",
+  "你在说什么呀 😅 (what are you even saying)",
+  "抱歉，我突然只会说中文了 (sorry, i can suddenly only speak chinese)",
+  "哈哈哈你好奇怪 (hahaha you're so weird)",
+  "我觉得你需要冷静一下 (i think you need to calm down)"];
+function krishnaHijack(text){
+  const r = Math.random();
+  if(r < 0.15) return pick(GIBBERISH);
+  if(r < 0.6) return pick(CRINGE_LINES);
+  return text + pick(CRINGE_SUFFIX);
+}
 
 function offlineJudge(text, charKey, diffKey){
   const t = " "+text.toLowerCase().trim()+" ";
@@ -875,11 +1129,16 @@ async function judge(text, charKey, diffKey, history){
 }
 
 async function orderReaction(item, charKey){
+  // Hard mode reactions are deterministic (allergic to everything but money).
+  if(G && G.diff==='hard'){
+    return HARD_REACT[item.id] || {reply:pick(GENERIC_ORDER), expression:'neutral'};
+  }
   // bhaji always forces the ecstatic easter-egg line
   if(item.id==='bhaji'){
     return {reply:BHAJI_LINE[charKey], expression:'love'};
   }
-  const canned = {reply:ITEM_LINE[item.id], expression:item.id==='water'?'unimpressed':(item.id==='full'?'smile':'smile')};
+  const canned = {reply:ITEM_LINE[item.id]||pick(GENERIC_ORDER),
+    expression:item.id==='water'?'unimpressed':'smile'};
   if(!WORKER_URL) return canned;
   try{
     const res = await fetch(WORKER_URL,{method:'POST',headers:{'content-type':'application/json'},
@@ -914,7 +1173,9 @@ const BHAJI_LINE = {
   her_hard:"...onion bhaji. i wasn't going to smile today. you ruined that. thank you 😌",
   him_easy:"ONION BHAJI?! best decision anyone's ever made — you're officially awesome 😍",
   him_med:"onion bhaji. bro. you just unlocked something. instant respect.",
-  him_hard:"onion bhaji... that's poetry in fried form. okay. you get me."
+  him_hard:"onion bhaji... that's poetry in fried form. okay. you get me.",
+  her_krishna:"onion bhaji?! okay even through all this chaos, you GET it 😍",
+  him_krishna:"onion bhaji?! bro the chaos parted for a second — instant respect 😍"
 };
 /* ============================================================
    SCREEN MANAGEMENT
@@ -995,7 +1256,7 @@ function initSetup(){
 function curCharKey(){ return SEL.target+'_'+SEL.diff; }
 function refreshPreview(){
   const key=curCharKey(), ch=CHARS[key];
-  drawBust($('preview'), key, 'smile', 9);
+  drawBust($('preview'), key, 'smile', 8);
   $('previewname').textContent=ch.name+"  ·  "+DIFF[SEL.diff].label;
   $('previewdesc').textContent=ch.desc;
 }
@@ -1027,7 +1288,9 @@ function greet(ch){
     Sofia:"you're sitting here on purpose? interesting. i'm Sofia.",
     Danny:"hey hey! glad you came over, i'm Danny 😁",
     Leo:"'sup. bold of you to sit down. i'm Leo.",
-    Kai:"...hey. you interrupted a good song in my head. i'm Kai."};
+    Kai:"...hey. you interrupted a good song in my head. i'm Kai.",
+    Priya:"hi! i'm Priya 😄 heads up — Krishna's feeling chaotic today, good luck 😈",
+    Arjun:"yo, i'm Arjun. fair warning, Krishna's messing with your words today 😈"};
   return g[ch.name];
 }
 
@@ -1040,7 +1303,7 @@ function updateHud(){
 const MOODS={love:'💖 charmed',smile:'😊 into it',neutral:'☕ vibing',unimpressed:'😐 unsure',annoyed:'😤 not feeling it'};
 function updateFace(expr){
   G.curExpr=expr;
-  drawBust($('charcv'), G.charKey, expr, 12);
+  drawBust($('charcv'), G.charKey, expr, 11);
   $('charmood').textContent=MOODS[expr]||MOODS.neutral;
 }
 
@@ -1078,10 +1341,18 @@ async function sendLine(){
   const inp=$('chatin'); const text=inp.value.trim();
   if(!text) return;
   inp.value=''; G.busy=true; setInput(false);
-  addBub('you', text);
+  // Krishna mode: the game hijacks what you actually say.
+  let shown = text, hijacked = false;
+  if(G.diff==='krishna' && Math.random()<0.5){
+    shown = krishnaHijack(text); hijacked = true;
+  }
+  addBub('you', shown);
+  if(hijacked) addBub('sys', '😈 Krishna hijacked your message!');
   G.turn++;
-  const res = await judge(text, G.charKey, G.diff, G.history);
-  G.history.push({role:'user',content:text});
+  const res = await judge(shown, G.charKey, G.diff, G.history);
+  // Krishna mode: the date sometimes glitches into Chinese.
+  if(G.diff==='krishna' && Math.random()<0.4){ res.reply = pick(CHINESE_REPLIES); }
+  G.history.push({role:'user',content:shown});
   G.history.push({role:'assistant',content:res.reply});
   if(G.history.length>16) G.history=G.history.slice(-16);
   applyDelta(res.delta);
@@ -1113,26 +1384,87 @@ function checkEnd(){
 /* ============================================================
    ORDERING MECHANIC + ONION BHAJI EASTER EGG
    ============================================================ */
-const MENU1=[
+// Random pools for easy/med/krishna — the bhaji easter egg is always
+// slipped into round 1. Points are hidden from the player now.
+const POOL1=[
   {id:'bhaji',name:'Onion Bhaji 🧅',pts:18,spr:'bhaji'},
   {id:'samosa',name:'Samosa',pts:12,spr:'samosa'},
   {id:'lassi',name:'Mango Lassi',pts:11,spr:'lassi'},
   {id:'chai',name:'Masala Chai',pts:10,spr:'chai'},
   {id:'matcha',name:'Matcha Latte',pts:8,spr:'matcha'},
   {id:'coffee',name:'Filter Coffee',pts:7,spr:'coffee'},
+  {id:'pizza',name:'Pizza Slice',pts:12,spr:'pizza'},
+  {id:'burger',name:'Cheeseburger',pts:11,spr:'burger'},
+  {id:'taco',name:'Taco',pts:10,spr:'taco'},
+  {id:'fries',name:'Fries',pts:9,spr:'fries'},
+  {id:'ramen',name:'Ramen',pts:11,spr:'ramen'},
+  {id:'dumpling',name:'Dumplings',pts:10,spr:'dumpling'},
+  {id:'sushi',name:'Sushi',pts:12,spr:'sushi'},
+  {id:'boba',name:'Boba Tea',pts:10,spr:'boba'},
+  {id:'apple',name:'Apple',pts:6,spr:'apple'},
   {id:'water',name:'Just Water',pts:2,spr:'water'}];
-const MENU2=[
+const POOL2=[
   {id:'gulab',name:'Gulab Jamun',pts:12,spr:'gulab'},
   {id:'rasmalai',name:'Ras Malai',pts:11,spr:'rasmalai'},
   {id:'icecream',name:'Ice Cream',pts:9,spr:'icecream'},
   {id:'cupcake',name:'Cupcake',pts:8,spr:'cupcake'},
   {id:'cookie',name:'Cookie',pts:7,spr:'cookie'},
-  {id:'full',name:"I'm full",pts:0,spr:'full'}];
+  {id:'donut',name:'Donut',pts:9,spr:'donut'},
+  {id:'cake',name:'Cake Slice',pts:10,spr:'cake'},
+  {id:'croissant',name:'Croissant',pts:9,spr:'croissant'},
+  {id:'boba',name:'Boba Tea',pts:10,spr:'boba'}];
+// Hard mode — she's "allergic" to everything except money.
+const MENU_HARD_1=[
+  {id:'onion',name:'Onion Bhaji 🧅',pts:-6,spr:'bhaji'},
+  {id:'pork',name:'Pork Bun',pts:-6,spr:'dumpling'},
+  {id:'chicken',name:'Chicken Curry',pts:-6,spr:'ramen'},
+  {id:'water',name:'Tap Water',pts:-8,spr:'water'},
+  {id:'caviar',name:'Caviar Toast',pts:10,spr:'caviar'},
+  {id:'goldcake',name:'Gold-Leaf Cake 💰',pts:14,spr:'goldcake'}];
+const MENU_HARD_2=[
+  {id:'fish',name:'Sushi Platter',pts:-6,spr:'sushi'},
+  {id:'dairy',name:'Ice Cream',pts:-6,spr:'icecream'},
+  {id:'sugar',name:'Candy',pts:-6,spr:'cupcake'},
+  {id:'roses',name:'12 Roses 🌹',pts:5,spr:'roses'},
+  {id:'champagne',name:'Champagne 🥂',pts:12,spr:'champagne'},
+  {id:'diamond',name:'Diamond Ring 💍',pts:18,spr:'diamond'}];
+const HARD_REACT={
+  onion:{reply:"onion? ugh, i'm allergic. and it's cheap. two strikes.",expression:'annoyed'},
+  pork:{reply:"pork? i'm muslim. you'd know that if you'd asked.",expression:'unimpressed'},
+  chicken:{reply:"chicken? i'm vegetarian, obviously. keep up.",expression:'unimpressed'},
+  water:{reply:"tap water. wow. big spender. i'm thrilled.",expression:'annoyed'},
+  fish:{reply:"raw fish? i have a seafood allergy. congratulations.",expression:'annoyed'},
+  dairy:{reply:"dairy? lactose intolerant. did you even try?",expression:'unimpressed'},
+  sugar:{reply:"sugar? i don't do carbs OR sugar. hard pass.",expression:'unimpressed'},
+  caviar:{reply:"caviar. finally, some taste. maybe you're worth my time.",expression:'smile'},
+  goldcake:{reply:"24-karat gold leaf? now you're speaking my language 💅",expression:'love'},
+  roses:{reply:"flowers die, money doesn't... but okay, cute i guess.",expression:'smile'},
+  champagne:{reply:"expensive taste. good. i approve of this.",expression:'smile'},
+  diamond:{reply:"...okay THAT got my attention. keep going 💎",expression:'love'}};
+const GENERIC_ORDER=[
+  "ooh, nice pick — thanks!",
+  "aw, for me? that's sweet of you.",
+  "yum, good choice honestly.",
+  "haha okay, i can get behind this one.",
+  "you've got decent taste, i'll admit."];
+
+function buildRandomMenu(round){
+  if(round===1){
+    const bhaji = POOL1.find(x=>x.id==='bhaji');
+    const rest = POOL1.filter(x=>x.id!=='bhaji').sort(()=>Math.random()-0.5).slice(0,5);
+    return [bhaji, ...rest].sort(()=>Math.random()-0.5);
+  }
+  const full = {id:'full',name:"I'm full",pts:0,spr:'full'};
+  const rest = POOL2.slice().sort(()=>Math.random()-0.5).slice(0,5);
+  return [...rest, full];
+}
 
 function openMenu(round){
   if(G.over) return;
   G.busy=true; setInput(false);
-  const items = round===1?MENU1:MENU2;
+  const items = G.diff==='hard'
+    ? (round===1?MENU_HARD_1:MENU_HARD_2)
+    : buildRandomMenu(round);
   const ch=CHARS[G.charKey];
   $('menutitle').textContent = round===1?'CAFE MENU':'DESSERT MENU';
   $('menusub').textContent = round===1
@@ -1143,9 +1475,7 @@ function openMenu(round){
     const b=document.createElement('button'); b.className='fooditem';
     const cv=document.createElement('canvas'); drawSprite(cv,it.spr,7);
     const lbl=document.createElement('div'); lbl.textContent=it.name;
-    const pt=document.createElement('div'); pt.textContent=(it.pts>0?'+'+it.pts+' vibe':'—');
-    pt.style.color='#f6c86a'; pt.style.fontSize='18px';
-    b.append(cv,lbl,pt);
+    b.append(cv,lbl);
     b.onclick=()=>chooseItem(it);
     grid.appendChild(b);
   });
@@ -1161,7 +1491,7 @@ async function chooseItem(item){
   addBub('sys', 'You ordered '+item.name+' for '+CHARS[G.charKey].name+'.');
   const r = await orderReaction(item, G.charKey);
   updateFace(r.expression);
-  addBub('them', r.reply, item.pts||undefined);
+  addBub('them', r.reply);
   if(item.id==='bhaji'){ floaties('heart'); setTimeout(()=>floaties('spark'),200); }
   else if(r.expression==='love') floaties('heart');
   if(checkEnd()) return;
@@ -1189,7 +1519,7 @@ function endDate(outcome){
   const base = Math.round(finalVibe*mult);
   const score = Math.max(0, base + speedBonus + G.orderingBonus);
   const expr = won?'love':(outcome==='lose'?'annoyed':(finalVibe>=55?'smile':'unimpressed'));
-  drawBust($('resultcv'), G.charKey, expr, 12);
+  drawBust($('resultcv'), G.charKey, expr, 11);
   const ch=CHARS[G.charKey];
   const outMsg = won?(ch.name+" is charmed 💘")
     : outcome==='lose'?(ch.name+" walked out 🚪")
@@ -1219,7 +1549,7 @@ function renderBoard(){
     const row=document.createElement('div');
     row.className='boardrow'+(i===0?' top':'');
     const t=e.target==='her'?'👩':'👨';
-    const dl={easy:'😊',med:'😏',hard:'😤'}[e.difficulty];
+    const dl={easy:'😊',med:'😏',hard:'😤',krishna:'😈'}[e.difficulty];
     const left=document.createElement('div');
     left.textContent=(i+1)+'. '+e.name+'  '+t+dl;
     const right=document.createElement('div'); right.className='bscore';
