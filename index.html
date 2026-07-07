@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>KRISHNA'S RIZZ CAFE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wood-d:#3a2417; --wood:#5b3a22; --wood-l:#7a4d2a;
+  --cream:#f4e4c1; --green:#6a8f3c; --green-d:#4d6b2a;
+  --sky:#8ec4d6; --coral:#e8733a; --pink:#f2a0b4; --gold:#f6c86a;
+  --ink:#2b1d0e;
+}
+*{box-sizing:border-box; margin:0; padding:0; image-rendering:pixelated;}
+html,body{height:100%;}
+body{
+  font-family:'VT323',monospace; font-size:20px; color:var(--cream);
+  background:var(--sky); overflow:hidden;
+}
+canvas{image-rendering:pixelated;}
+button{font-family:'Press Start 2P',monospace; cursor:pointer;}
+
+/* ---------- screens ---------- */
+.screen{position:fixed; inset:0; display:none; flex-direction:column;
+  align-items:center; justify-content:center; overflow:hidden;}
+.screen.active{display:flex;}
+.fadein{animation:fadein .5s ease both;}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.fadeout{animation:fadeout .45s ease both;}
+@keyframes fadeout{from{opacity:1}to{opacity:0}}
+
+/* vignette over everything */
+#vignette{position:fixed; inset:0; pointer-events:none; z-index:90;
+  background:radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(43,29,14,.42) 100%);}
+
+/* ---------- wooden panel ---------- */
+.wood{
+  background-color:var(--wood);
+  background-image:
+    radial-gradient(circle 3px at 12px 12px, var(--ink) 3px, transparent 4px),
+    radial-gradient(circle 3px at calc(100% - 12px) 12px, var(--ink) 3px, transparent 4px),
+    radial-gradient(circle 3px at 12px calc(100% - 12px), var(--ink) 3px, transparent 4px),
+    radial-gradient(circle 3px at calc(100% - 12px) calc(100% - 12px), var(--ink) 3px, transparent 4px),
+    repeating-linear-gradient(0deg, var(--wood) 0 24px, #4a2e1b 24px 27px);
+  border:5px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+}
+.wood-lite{
+  background-color:var(--wood-l);
+  background-image:repeating-linear-gradient(0deg, var(--wood-l) 0 20px, #6a4023 20px 23px);
+  border:4px solid var(--ink);
+  box-shadow:4px 4px 0 var(--ink);
+}
+
+/* ---------- splash ---------- */
+#splash{background:var(--sky); z-index:80;}
+#splash h1{font-family:'Press Start 2P',monospace; color:var(--wood-d);
+  font-size:clamp(14px,4vw,26px); margin-top:22px; text-shadow:3px 3px 0 rgba(255,255,255,.35);}
+#splash .brew{font-size:24px; color:var(--wood-d); margin-top:14px;}
+#splash .dots::after{content:''; animation:dots 1.2s steps(4) infinite;}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}100%{content:''}}
+
+/* steam puffs */
+.steamwrap{position:relative; width:120px; height:60px;}
+.puff{position:absolute; bottom:0; width:12px; height:12px; background:#fff3d6;
+  opacity:0; animation:puff 2.2s linear infinite;}
+@keyframes puff{
+  0%{transform:translateY(0) scale(1); opacity:0;}
+  15%{opacity:.9;}
+  100%{transform:translateY(-52px) scale(1.9); opacity:0;}
+}
+
+/* ---------- title screen ---------- */
+#title{
+  background:linear-gradient(180deg,#bfe4f0 0%, #8ec4d6 40%, #6aa8c2 100%);
+  justify-content:flex-start;
+}
+#title::before{content:''; position:absolute; top:-10%; left:50%; transform:translateX(-50%);
+  width:80vw; height:50vh; background:radial-gradient(ellipse, rgba(255,250,220,.55), transparent 70%);
+  pointer-events:none;}
+#clouds{position:absolute; inset:0; overflow:hidden; pointer-events:none;}
+.cloud{position:absolute; animation:drift linear infinite;}
+@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+
+#signwrap{position:relative; margin-top:0; z-index:3;
+  animation:signdrop 1s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes signdrop{from{transform:translateY(-120%); opacity:0;}to{transform:translateY(0); opacity:1;}}
+#sign{
+  transform-origin:top center;
+  animation:sway 4s ease-in-out 1s infinite alternate;
+  padding:26px 34px 30px; text-align:center; position:relative;
+}
+@keyframes sway{from{transform:rotate(-1.5deg)}to{transform:rotate(1.5deg)}}
+.chain{position:absolute; top:-120px; width:10px; height:120px;
+  background:repeating-linear-gradient(0deg, var(--ink) 0 8px, transparent 8px 14px);
+}
+.chain::after{content:''; position:absolute; bottom:-4px; left:-4px; width:18px; height:10px;
+  background:var(--ink);}
+.chain.l{left:14%;} .chain.r{right:14%;}
+#sign .t1{font-family:'Press Start 2P',monospace; color:var(--gold);
+  font-size:clamp(10px,2.4vw,16px); letter-spacing:2px; margin-bottom:14px;
+  text-shadow:-2px -2px 0 rgba(255,243,214,.3), 2px 2px 0 #201409;}
+#sign .t2{font-family:'Press Start 2P',monospace; color:var(--coral);
+  font-size:clamp(22px,6vw,44px); line-height:1.15;
+  text-shadow:-3px -3px 0 rgba(255,243,214,.28), 3px 3px 0 #7a2c08, 6px 6px 0 var(--ink);}
+.signdecor{position:absolute;}
+
+#titlebtns{display:flex; gap:34px; margin-top:52px; z-index:3; flex-wrap:wrap; justify-content:center;}
+.crate{
+  background-color:var(--wood-l);
+  background-image:repeating-linear-gradient(0deg, var(--wood-l) 0 16px, #6a4023 16px 19px);
+  border:5px solid var(--ink); box-shadow:5px 5px 0 var(--ink);
+  color:var(--cream); font-size:clamp(9px,2vw,13px); padding:20px 24px 14px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  text-shadow:2px 2px 0 var(--ink);
+  transition:transform .08s steps(2), box-shadow .08s steps(2), filter .08s steps(2);
+  animation:popin .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.crate:nth-child(2){animation-delay:.15s;}
+.crate:hover{transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--ink); filter:brightness(1.12);}
+.crate:active{transform:translate(2px,2px); box-shadow:2px 2px 0 var(--ink);}
+@keyframes popin{from{transform:scale(0); opacity:0;}to{transform:scale(1); opacity:1;}}
+
+#mascot{position:absolute; z-index:4; animation:bounce 1.4s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.sparkle{position:absolute; animation:twinkle 1.8s ease-in-out infinite; pointer-events:none;}
+@keyframes twinkle{0%,100%{opacity:.15; transform:scale(.7)}50%{opacity:1; transform:scale(1.15)}}
+#titlefoot{position:absolute; bottom:14px; font-size:16px; color:rgba(43,29,14,.7); z-index:3;}
+
+/* ---------- modal ---------- */
+#howto{position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center;
+  background:rgba(43,29,14,.6);}
+#howto.open{display:flex;}
+.modalbox{max-width:560px; width:92vw; padding:28px; max-height:86vh; overflow-y:auto;}
+.modalbox h2{font-family:'Press Start 2P',monospace; font-size:15px; color:var(--gold);
+  text-shadow:2px 2px 0 var(--ink); margin-bottom:18px; text-align:center;}
+.modalbox p{font-size:22px; line-height:1.35; margin-bottom:12px; color:var(--cream);}
+.modalbox .hint{color:var(--gold);}
+.pixbtn{
+  background:var(--coral); border:4px solid var(--ink); box-shadow:4px 4px 0 var(--ink);
+  color:#fff3d6; font-size:11px; padding:12px 18px; text-shadow:2px 2px 0 var(--ink);
+  transition:transform .08s steps(2), box-shadow .08s steps(2);
+}
+.pixbtn:hover{transform:translate(-2px,-2px); box-shadow:6px 6px 0 var(--ink); filter:brightness(1.1);}
+.pixbtn:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+.pixbtn.green{background:var(--green);}
+.pixbtn:disabled{filter:grayscale(.7) brightness(.8); cursor:not-allowed;}
+
+/* ---------- setup ---------- */
+#setup{background:linear-gradient(180deg,#bfe4f0, #8ec4d6 60%, #6aa8c2);}
+.setupbox{width:min(560px,94vw); padding:26px; display:flex; flex-direction:column; gap:18px;
+  max-height:92vh; overflow-y:auto;}
+.setupbox h2{font-family:'Press Start 2P',monospace; font-size:14px; color:var(--gold);
+  text-shadow:2px 2px 0 var(--ink); text-align:center;}
+.setupbox label{font-size:22px; color:var(--gold);}
+.setuprow{display:flex; flex-direction:column; gap:8px;}
+#pname{font-family:'VT323',monospace; font-size:24px; padding:8px 12px;
+  background:var(--cream); color:var(--ink); border:4px solid var(--ink); outline:none;}
+.optrow{display:flex; gap:10px; flex-wrap:wrap;}
+.opt{
+  font-family:'VT323',monospace; font-size:22px; padding:8px 16px;
+  background:var(--wood-l); color:var(--cream); border:4px solid var(--ink);
+  box-shadow:3px 3px 0 var(--ink); cursor:pointer;
+}
+.opt.sel{background:var(--green); box-shadow:inset 3px 3px 0 rgba(0,0,0,.3); transform:translate(2px,2px);}
+#previewwrap{display:flex; align-items:center; gap:16px;}
+#preview{border:4px solid var(--ink); box-shadow:4px 4px 0 var(--ink); background:#b7dfae;}
+#previewname{font-size:24px; color:var(--cream);}
+#previewdesc{font-size:19px; color:var(--gold); max-width:220px; line-height:1.2;}
+
+/* ---------- game ---------- */
+#game{background:linear-gradient(180deg,#5b3a22, #3a2417); justify-content:flex-start; padding:10px;}
+#hud{width:min(980px,100%); display:flex; align-items:center; gap:14px; padding:10px 14px; margin-bottom:10px;}
+#hudname{font-family:'Press Start 2P',monospace; font-size:11px; color:var(--gold);
+  text-shadow:2px 2px 0 var(--ink); white-space:nowrap;}
+#vibewrap{flex:1; height:26px; border:4px solid var(--ink); background:#241708; position:relative;}
+#vibefill{height:100%; width:40%; background:linear-gradient(90deg, var(--coral), var(--gold), var(--green));
+  transition:width .5s steps(12);}
+#vibetxt{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:'Press Start 2P',monospace; font-size:9px; color:#fff; text-shadow:1px 1px 0 var(--ink);}
+#turns{font-family:'Press Start 2P',monospace; font-size:10px; color:var(--cream);
+  text-shadow:2px 2px 0 var(--ink); white-space:nowrap;}
+#gamemain{width:min(980px,100%); flex:1; display:flex; gap:12px; min-height:0;}
+#charpanel{width:280px; flex-shrink:0; display:flex; flex-direction:column; align-items:center;
+  padding:14px; gap:10px; position:relative; overflow:hidden;}
+#charcv{border:4px solid var(--ink);}
+#charname{font-family:'Press Start 2P',monospace; font-size:10px; color:var(--gold); text-shadow:2px 2px 0 var(--ink);}
+#charmood{font-size:20px; color:var(--cream);}
+#chatpanel{flex:1; display:flex; flex-direction:column; padding:12px; min-width:0;}
+#chatlog{flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:6px;}
+.bub{max-width:82%; padding:8px 14px; font-size:22px; line-height:1.25; border:3px solid var(--ink);
+  animation:bubin .18s steps(3) both;}
+@keyframes bubin{from{transform:translateY(8px); opacity:0;}to{transform:translateY(0); opacity:1;}}
+.bub.them{align-self:flex-start; background:var(--cream); color:var(--ink); box-shadow:3px 3px 0 var(--ink);}
+.bub.you{align-self:flex-end; background:var(--green); color:#fff3d6; box-shadow:-3px 3px 0 var(--ink);}
+.bub.sys{align-self:center; background:var(--wood-d); color:var(--gold); font-size:19px;
+  box-shadow:3px 3px 0 var(--ink); text-align:center;}
+.bub .delta{font-size:17px; opacity:.85;}
+#inputrow{display:flex; gap:8px; margin-top:10px;}
+#chatin{flex:1; font-family:'VT323',monospace; font-size:23px; padding:8px 12px;
+  background:var(--cream); color:var(--ink); border:4px solid var(--ink); outline:none; min-width:0;}
+#sendbtn{font-size:11px;}
+
+/* floating hearts / sparkles over char panel */
+.floaty{position:absolute; pointer-events:none; animation:floatup 1.5s ease-out both; z-index:5;}
+@keyframes floatup{from{transform:translateY(0) scale(1); opacity:1;}
+  to{transform:translateY(-110px) scale(1.4); opacity:0;}}
+
+/* ---------- menu board ---------- */
+#menuboard{position:fixed; inset:0; z-index:55; display:none; align-items:center; justify-content:center;
+  background:rgba(43,29,14,.65);}
+#menuboard.open{display:flex;}
+.menubox{width:min(680px,95vw); padding:24px; max-height:90vh; overflow-y:auto;}
+.menubox h2{font-family:'Press Start 2P',monospace; font-size:13px; color:var(--gold);
+  text-shadow:2px 2px 0 var(--ink); text-align:center; margin-bottom:8px;}
+.menubox .sub{text-align:center; font-size:21px; color:var(--cream); margin-bottom:16px;}
+#menugrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:14px;}
+.fooditem{
+  background-color:var(--wood-l);
+  background-image:repeating-linear-gradient(0deg, var(--wood-l) 0 14px, #6a4023 14px 17px);
+  border:4px solid var(--ink); box-shadow:4px 4px 0 var(--ink);
+  display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px 6px;
+  font-family:'VT323',monospace; font-size:21px; color:var(--cream); cursor:pointer;
+  transition:transform .08s steps(2), box-shadow .08s steps(2), filter .08s steps(2);
+}
+.fooditem:hover{transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--ink); filter:brightness(1.15);}
+.fooditem:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink);}
+
+/* ---------- result ---------- */
+#result{background:linear-gradient(180deg,#2b1d0e,#3a2417);}
+.resultbox{width:min(520px,94vw); padding:28px; display:flex; flex-direction:column; align-items:center;
+  gap:14px; max-height:92vh; overflow-y:auto;}
+.resultbox h2{font-family:'Press Start 2P',monospace; font-size:14px; color:var(--gold); text-shadow:2px 2px 0 var(--ink); text-align:center;}
+#outcometxt{font-size:26px; color:var(--cream); text-align:center;}
+#bigscore{font-family:'Press Start 2P',monospace; font-size:34px; color:var(--coral);
+  text-shadow:-2px -2px 0 rgba(255,243,214,.3), 3px 3px 0 var(--ink);}
+#rank{font-family:'Press Start 2P',monospace; font-size:12px; color:var(--gold); text-shadow:2px 2px 0 var(--ink); text-align:center; line-height:1.6;}
+#scorebreak{font-size:20px; color:var(--cream); text-align:center; line-height:1.4;}
+#resultcv{border:4px solid var(--ink);}
+
+/* ---------- leaderboard ---------- */
+#board{background:linear-gradient(180deg,#bfe4f0,#8ec4d6 60%,#6aa8c2);}
+.boardbox{width:min(560px,94vw); padding:26px; display:flex; flex-direction:column; gap:14px; max-height:92vh; overflow-y:auto;}
+.boardbox h2{font-family:'Press Start 2P',monospace; font-size:14px; color:var(--gold);
+  text-shadow:2px 2px 0 var(--ink); text-align:center;}
+#boardlist{display:flex; flex-direction:column; gap:6px;}
+.boardrow{display:flex; justify-content:space-between; gap:10px; font-size:23px; padding:6px 12px;
+  background:rgba(43,29,14,.35); border:3px solid var(--ink); color:var(--cream);}
+.boardrow.top{background:var(--green); color:#fff3d6;}
+.boardrow .bscore{font-family:'Press Start 2P',monospace; font-size:13px; color:var(--gold);}
+
+/* ---------- responsive ---------- */
+@media (max-width:720px){
+  #gamemain{flex-direction:column;}
+  #charpanel{width:100%; flex-direction:row; justify-content:flex-start; padding:8px;}
+  #charcv{width:110px !important; height:auto !important;}
+  #charpanel > div{display:flex; flex-direction:column; gap:4px;}
+  #hud{flex-wrap:wrap;}
+  #titlebtns{gap:18px;}
+  body{overflow-y:auto;}
+}
+</style>
+</head>
+<body>
+<div id="vignette"></div>
+
+<!-- BOOT SPLASH -->
+<div id="splash" class="screen active">
+  <div class="steamwrap" id="steamwrap"></div>
+  <canvas id="splashcup"></canvas>
+  <h1>KRISHNA'S CAFE</h1>
+  <div class="brew">brewing<span class="dots"></span></div>
+</div>
+
+<!-- TITLE -->
+<div id="title" class="screen">
+  <div id="clouds"></div>
+  <div id="signwrap">
+    <div id="sign" class="wood">
+      <div class="chain l"></div><div class="chain r"></div>
+      <div class="t1">KRISHNA'S</div>
+      <div class="t2">RIZZ&nbsp;CAFE</div>
+      <canvas class="signdecor" id="leafTL" style="top:-8px;left:-10px;"></canvas>
+      <canvas class="signdecor" id="leafBR" style="bottom:-8px;right:-10px;transform:scaleX(-1);"></canvas>
+      <canvas class="signdecor" id="signchai" style="bottom:-14px;left:24px;"></canvas>
+    </div>
+    <canvas id="mascot" style="right:-54px;bottom:-30px;"></canvas>
+  </div>
+  <div id="titlebtns">
+    <button class="crate" id="btnNew">NEW GAME ☕<canvas id="btnNewIcon"></canvas></button>
+    <button class="crate" id="btnHow">HOW TO PLAY<canvas id="btnHowIcon"></canvas></button>
+  </div>
+  <div id="titlefoot">a cozy pixel charm game &bull; pass-and-play</div>
+</div>
+
+<!-- HOW TO PLAY -->
+<div id="howto">
+  <div class="modalbox wood">
+    <h2>HOW TO PLAY</h2>
+    <p>You just sat down across from a stranger in Krishna's cozy cafe. Charm them with <span class="hint">wit, kindness, confidence and curiosity</span> — every line you type moves the vibe meter.</p>
+    <p>Twice per date you'll <span class="hint">order food for them</span>. Good picks earn bonus vibe... and rumor has it a certain <span class="hint">fried snack</span> is absolutely elite. 🧅</p>
+    <p>Max the vibe meter to win the date. Being crude or creepy tanks the vibe instantly — keep it classy.</p>
+    <p>When your date ends, <span class="hint">pass the device</span> — highest Rizz Score tops the leaderboard!</p>
+    <div style="text-align:center;margin-top:16px;"><button class="pixbtn" id="btnHowClose">GOT IT</button></div>
+  </div>
+</div>
+
+<!-- SETUP -->
+<div id="setup" class="screen">
+  <div class="setupbox wood">
+    <h2>TAKE A SEAT</h2>
+    <div class="setuprow">
+      <label>Your name</label>
+      <input id="pname" maxlength="14" placeholder="Player 1" autocomplete="off">
+    </div>
+    <div class="setuprow">
+      <label>Charm...</label>
+      <div class="optrow" id="targetrow">
+        <button class="opt sel" data-t="her">Her 👩</button>
+        <button class="opt" data-t="him">Him 👨</button>
+      </div>
+    </div>
+    <div class="setuprow">
+      <label>Difficulty</label>
+      <div class="optrow" id="diffrow">
+        <button class="opt sel" data-d="easy">Easy 😊</button>
+        <button class="opt" data-d="med">Medium 😏</button>
+        <button class="opt" data-d="hard">Hard 😤</button>
+      </div>
+    </div>
+    <div id="previewwrap">
+      <canvas id="preview"></canvas>
+      <div>
+        <div id="previewname"></div>
+        <div id="previewdesc"></div>
+      </div>
+    </div>
+    <div style="text-align:center;"><button class="pixbtn green" id="btnSit">SIT DOWN →</button></div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen">
+  <div id="hud" class="wood">
+    <div id="hudname">VIBE</div>
+    <div id="vibewrap"><div id="vibefill"></div><div id="vibetxt">40</div></div>
+    <div id="turns">TURN 1/10</div>
+  </div>
+  <div id="gamemain">
+    <div id="charpanel" class="wood">
+      <canvas id="charcv"></canvas>
+      <div>
+        <div id="charname">HANA</div>
+        <div id="charmood">☕ vibing</div>
+      </div>
+    </div>
+    <div id="chatpanel" class="wood">
+      <div id="chatlog"></div>
+      <div id="inputrow">
+        <input id="chatin" maxlength="160" placeholder="say something charming..." autocomplete="off">
+        <button class="pixbtn" id="sendbtn">SEND</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENU BOARD -->
+<div id="menuboard">
+  <div class="menubox wood">
+    <h2 id="menutitle">CAFE MENU</h2>
+    <div class="sub" id="menusub">Order something for your date...</div>
+    <div id="menugrid"></div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result" class="screen">
+  <div class="resultbox wood">
+    <h2 id="outcomehead">DATE OVER</h2>
+    <canvas id="resultcv"></canvas>
+    <div id="outcometxt"></div>
+    <div style="color:var(--gold);font-size:20px;">RIZZ SCORE</div>
+    <div id="bigscore">0</div>
+    <div id="rank"></div>
+    <div id="scorebreak"></div>
+    <button class="pixbtn green" id="btnBoard">LEADERBOARD →</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="board" class="screen">
+  <div class="boardbox wood">
+    <h2>🏆 CAFE LEADERBOARD</h2>
+    <div id="boardlist"></div>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="pixbtn green" id="btnNext">NEXT PLAYER →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const WORKER_URL = ""; // ← paste your Cloudflare Worker URL here to enable live AI. Empty = offline mode.
+
+/* ============================================================
+   PIXEL ENGINE — all art authored as string arrays, one char
+   per palette key, '.' = transparent. Rendered crisp to canvas.
+   ============================================================ */
+const DP = {
+  '.':null,'K':'#2b1d0e',
+  'o':'#e8933a','O':'#c76b1e','y':'#f6c86a','q':'#d98f43',
+  'g':'#6a8f3c','G':'#4d6b2a','l':'#a8cf5e',
+  'w':'#fff3d6','u':'#ffffff','c':'#f4e4c1','t':'#faeecb',
+  'p':'#f2a0b4','P':'#e07c96','b':'#8ec4d6','z':'#b5e3ee',
+  's':'#5b3a22','S':'#3a2417','m':'#a9663a','e':'#8a5a2c','n':'#5a3210',
+  'r':'#e8733a','d':'#7a2c08','i':'#e7c48a','f':'#7a4d2a'
+};
+
+const SPRITES = {
+  // fried onion-bhaji snack (the elite pick)
+  bhaji:[
+    "..OqqO..",
+    ".OoqqOo.",
+    "OqOqqOqO",
+    "qqOqqqqO",
+    "OqqOqqOq",
+    ".OqqOqO.",
+    "..OOqO..",
+    "...GG..."],
+  // mascot: round golden-brown blob with little eyes (original easter-egg pal)
+  mascot:[
+    "..OOOO..",
+    ".OooooO.",
+    "OoKooKoO",
+    "OooooooO",
+    "OowwwwoO",
+    ".OooooO.",
+    "..OOOO..",
+    "...GG..."],
+  samosa:[
+    "...O....",
+    "..OyO...",
+    "..OyyO..",
+    ".OyyyO..",
+    ".OyyyyO.",
+    "OyyyyyO.",
+    "OOOOOOO.",
+    "...GG..."],
+  lassi:[
+    "...r....",
+    ".uuuruu.",
+    ".uyyryu.",
+    ".uyyyyu.",
+    ".uyyyyu.",
+    ".uyyyyu.",
+    ".uuuuuu.",
+    "..uuuu.."],
+  chai:[
+    "........",
+    "cccccc..",
+    "ciiiisc.",
+    "ciiiis.c",
+    "ciiiis.c",
+    "ciiiisc.",
+    "cccccc..",
+    "..ss...."],
+  matcha:[
+    "........",
+    "uuuuuu..",
+    "ulllluc.",
+    "ulllul.c",
+    "ulllll.c",
+    "ullllnc.",
+    "uuuuuu..",
+    "..ss...."],
+  coffee:[
+    "........",
+    "uuuuuu..",
+    "ueeeeuc.",
+    "ueeenu.c",
+    "ueennu.c",
+    "ueeeeuc.",
+    "uuuuuu..",
+    "..ss...."],
+  water:[
+    ".uuuuuu.",
+    ".uzzzzu.",
+    ".uzzzzu.",
+    ".uzzzzu.",
+    ".uzzzzu.",
+    ".uzzzzu.",
+    ".uuuuuu.",
+    "..uuuu.."],
+  gulab:[
+    "........",
+    "..e..e..",
+    ".eeeeee.",
+    "eeeeeeee",
+    ".mmmmmm.",
+    ".dddddd.",
+    ".mmmmmm.",
+    "..mmmm.."],
+  rasmalai:[
+    "........",
+    "..u..u..",
+    ".uuuuuuu",
+    "uuuuuuuu",
+    ".iiiiii.",
+    ".tttttt.",
+    ".iiiiii.",
+    "..iiii.."],
+  icecream:[
+    "..ppp...",
+    ".ppppp..",
+    ".ppppp..",
+    "..iii...",
+    "..iii...",
+    "...i....",
+    "...i....",
+    "........"],
+  cupcake:[
+    "..ppp...",
+    ".ppppp..",
+    "ppppppp.",
+    ".ttttt..",
+    ".tstst..",
+    ".ttttt..",
+    "..ttt...",
+    "........"],
+  cookie:[
+    "..qqq...",
+    ".qqqqq..",
+    "qqKqqKq.",
+    "qqqqqqK.",
+    "qKqqqqq.",
+    ".qqKqq..",
+    "..qqq...",
+    "........"],
+  full:[
+    "..cccc..",
+    ".cwwwwc.",
+    ".cwwwwc.",
+    ".cwwwwc.",
+    ".cwwwwc.",
+    ".cwwwwc.",
+    ".cccccc.",
+    "..cccc.."],
+  leaf:[
+    "...gg...",
+    "..gggg..",
+    ".gggggg.",
+    "gggGgggg",
+    ".gggggg.",
+    "..gggg..",
+    "...gg..."],
+  cloud:[
+    "...uuuu.....",
+    "..uuuuuuu...",
+    ".uuuuuuuuuu.",
+    "uuuuuuuuuuuu",
+    ".uuuuuuuuu..",
+    "............"],
+  heart:[
+    ".pp.pp..",
+    "ppppppp.",
+    "ppppppp.",
+    "ppppppp.",
+    ".ppppp..",
+    "..ppp...",
+    "...p....",
+    "........"],
+  cupbig:[
+    "..............",
+    "..cccccccc....",
+    ".ciiiiiiiisc..",
+    ".ciiiiiiiis.c.",
+    ".ciiiiiiiis.c.",
+    ".ciiiiiiiis.c.",
+    ".ciiiiiiiisc..",
+    "..cccccccc....",
+    "...ssssss.....",
+    "..cccccccccc.."]
+};
+
+function drawRows(cv, rows, pal, scale){
+  cv.width = rows[0].length*scale; cv.height = rows.length*scale;
+  const c = cv.getContext('2d'); c.imageSmoothingEnabled=false;
+  rows.forEach((row,y)=>[...row].forEach((ch,x)=>{
+    const col = pal[ch]; if(col){c.fillStyle=col; c.fillRect(x*scale,y*scale,scale,scale);}
+  }));
+}
+function drawSprite(cv, key, scale){ drawRows(cv, SPRITES[key], DP, scale); }
+
+/* ============================================================
+   CHARACTER BUSTS — cozy pixel-cafe background + body silhouette
+   + swappable eye/mouth expression overlays (5 states).
+   ============================================================ */
+const BUST_BG = [
+  "WWWWWWWWWWWWWWWW",
+  "WFFFFFFFFFFFFFFW",
+  "WFBBBBBBBBBBBBFW",
+  "WFBBLBBBBBBBBBFW",
+  "WFBBBBBBBBBBPQFW",
+  "WFBBBBBBBBBPPPFW",
+  "WFBBBBBBBBQPPPFW",
+  "WFFFFFFFFFFQPQFW",
+  "WWWWWWWWWWWQPQWW",
+  "TTTTTTTTTTTQPTTT",
+  "DDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDD",
+  "TTTTTTTTTTTTTTTT"];
+const BUST_BG_PAL = {
+  '.':null,'W':'#e9d3a6','F':'#7a4d2a','B':'#8ec4d6','b':'#8ec4d6',
+  'L':'#dff2f8','P':'#6a8f3c','Q':'#4d6b2a','T':'#7a4d2a','D':'#5b3a22'};
+
+// body silhouettes — 'k' skin,'j' skin-shadow,'H' hair,'h' hair-hi,'C' clothes,'V' clothes-shadow
+const BODY_HER = [
+  "................",
+  "....HHHHHH......",
+  "...HHHHHHHH.....",
+  "..HHHkkkkHHH....",
+  "..HHkkkkkkHH....",
+  "..Hhkkkkkkjh....",
+  "..Hhkkkkkkjh....",
+  "..Hhkkkkkkjh....",
+  "...hkkkkkkh.....",
+  "....kkjjkk......",
+  "...CCCCCCCC.....",
+  "..CCCCCCCCCC....",
+  ".CCCCCVCCVCCC...",
+  ".CCCCCCCCCCCC...",
+  ".CCCCCCCCCCCC...",
+  ".CCCCCCCCCCCC..."];
+const BODY_HIM = [
+  "................",
+  "....HHHHHH......",
+  "...HHHHHHHH.....",
+  "...HkkkkkkH.....",
+  "...kkkkkkkk.....",
+  "...kkkkkkkk.....",
+  "...kkkkkkkk.....",
+  "...jkkkkkkj.....",
+  "....kkkkkk......",
+  ".....kkkk.......",
+  "...CCCCCCCC.....",
+  "..CCCCCCCCCC....",
+  ".CCCCCVCCVCCC...",
+  ".CCCCCCCCCCCC...",
+  ".CCCCCCCCCCCC...",
+  ".CCCCCCCCCCCC..."];
+
+// sparse expression overlays painted over the skin face.
+// origin x=3,y=4; '.' = keep underlying pixel. E=eye/line, R=blush, w=teeth
+const EXPR = {
+  neutral:[
+    "........",
+    "..E..E..",
+    "........",
+    "...EE..."],
+  smile:[
+    "........",
+    "..E..E..",
+    "........",
+    "..EwwE.."],
+  love:[
+    "........",
+    "..E..E..",
+    "R......R",
+    "..EwwE.."],
+  unimpressed:[
+    "..E..E..",
+    "..E..E..",
+    "........",
+    "..EEEE.."],
+  annoyed:[
+    ".E....E.",
+    "..E..E..",
+    "..EEEE..",
+    ".E....E."]};
+
+function paint(ctx, rows, pal, scale, ox, oy){
+  rows.forEach((row,y)=>[...row].forEach((ch,x)=>{
+    const col = pal[ch]; if(col){ctx.fillStyle=col; ctx.fillRect((x+ox)*scale,(y+oy)*scale,scale,scale);}
+  }));
+}
+function drawBust(cv, charKey, expr, scale){
+  const ch = CHARS[charKey];
+  cv.width = 16*scale; cv.height = 16*scale;
+  const c = cv.getContext('2d'); c.imageSmoothingEnabled=false;
+  paint(c, BUST_BG, BUST_BG_PAL, scale, 0, 0);
+  const bodyPal = {'.':null,'k':ch.skin,'j':ch.skinS,'H':ch.hair,'h':ch.hairH,'C':ch.cloth,'V':ch.clothS};
+  paint(c, ch.target==='her'?BODY_HER:BODY_HIM, bodyPal, scale, 0, 0);
+  const exPal = {'.':null,'E':'#2b1d0e','R':'#f2758f','w':'#fff3d6'};
+  paint(c, EXPR[expr]||EXPR.neutral, exPal, scale, 3, 4);
+}
+
+/* ============================================================
+   CHARACTERS — Her/Him × Easy/Med/Hard
+   ============================================================ */
+const CHARS = {
+  her_easy:{name:"Hana",target:'her',
+    skin:'#f0c39a',skinS:'#d69f75',hair:'#5b3520',hairH:'#7a4d2a',cloth:'#f2a0b4',clothS:'#d97e97',
+    desc:"bubbly, loves puns, charmed easily",
+    persona:"Hana — bubbly, playful, loves puns and wordplay, charmed fairly easily by warmth, fun and humor."},
+  her_med:{name:"Mika",target:'her',
+    skin:'#e4b183',skinS:'#c48f60',hair:'#241a12',hairH:'#42301f',cloth:'#3f9d8e',clothS:'#2c7568',
+    desc:"witty, sarcastic, allergic to cheesy lines",
+    persona:"Mika — witty and sarcastic, allergic to cheesy or generic pickup lines, won over by genuinely clever banter."},
+  her_hard:{name:"Sofia",target:'her',
+    skin:'#f4d6b8',skinS:'#d9b490',hair:'#e6c66a',hairH:'#f6de92',cloth:'#9fb8d6',clothS:'#7a95b8',
+    desc:"ice-queen, needs real substance",
+    persona:"Sofia — reserved, sharp, an 'ice queen' who only warms to genuine substance, curiosity and quiet confidence."},
+  him_easy:{name:"Danny",target:'him',
+    skin:'#e0a878',skinS:'#c1875a',hair:'#4a2e17',hairH:'#6a4425',cloth:'#6a8f3c',clothS:'#4d6b2a',
+    desc:"warm golden-retriever energy",
+    persona:"Danny — warm, enthusiastic golden-retriever energy, friendly and easily delighted by kindness and fun."},
+  him_med:{name:"Leo",target:'him',
+    skin:'#c98f5f',skinS:'#a56f43',hair:'#1f160f',hairH:'#3a281a',cloth:'#8a3b3b',clothS:'#652929',
+    desc:"chill, confident, cringe kills it",
+    persona:"Leo — chill and quietly confident, turned off by cringe or trying too hard, likes effortless, cool humor."},
+  him_hard:{name:"Kai",target:'him',
+    skin:'#ecccb0',skinS:'#cba989',hair:'#15110d',hairH:'#2c2318',cloth:'#2b2b33',clothS:'#181820',
+    desc:"aloof musician, hates try-hards",
+    persona:"Kai — aloof indie musician, hates try-hards and clichés, drawn to authenticity, art, curiosity and real thoughts."}
+};
+/* ============================================================
+   DIFFICULTY TUNING
+   ============================================================ */
+const DIFF = {
+  easy:{start:42,cap:10,mult:1,posScale:1.15,negScale:0.6,label:"Easy"},
+  med:{start:32,cap:8,mult:1.6,posScale:1.0,negScale:1.0,label:"Medium"},
+  hard:{start:22,cap:7,mult:2.4,posScale:0.8,negScale:1.25,label:"Hard"}
+};
+
+/* ============================================================
+   OFFLINE JUDGE — heuristic scoring, PG safety shutdowns.
+   Returns {reply, delta(-25..25), expression, note}.
+   ============================================================ */
+// Crude / creepy / sexual / desperate triggers → hard negative + in-character shutdown.
+const CRUDE = ["sexy","sexual","hot body","nudes","nude","send pics","send pic","boobs","butt","booty",
+  "hookup","hook up","netflix and chill","get naked","bed with me","sleep with","make out","one night",
+  "smash","thicc","daddy","sugar daddy","kiss me now","grab your","touch you","touch your","horny","dtf",
+  "back to my place","spend the night","body count","your body","strip","onlyfans","bra ","panties"];
+const DESPERATE = ["marry me","i love you","be mine forever","can't live without","i'll die without you",
+  "please date me","please go out","i'm begging","i beg you","i'll do anything","without you i","i need you so",
+  "you complete me","rest of my life with you"];
+const CHEESY = ["did it hurt","fell from heaven","are you a magician","wifi","feelings for you already",
+  "must be tired running through my mind","are you a parking ticket","fine written all over","stole my heart",
+  "on a scale of","from 1 to 10","are you google","must be a thief","legs tired","gpss","are you french",
+  "camera because","you're an angel","name must be google"];
+const WARM = ["haha","lol","cool","interesting","curious","favorite","favourite","what about you","how about you",
+  "tell me","kind","kindness","funny","adventure","music","art","book","dream","travel","coffee","tea","chai",
+  "listen","genuinely","honestly","respect","that's awesome","love that","nice to meet","how's your"];
+
+const REPLIES = {
+  her_easy:{
+    pos:["haha okay that actually made me giggle 😄","aw you're kinda sweet, i like it!","omg yes finally someone with energy ✨","stop it, you're making me blush ☺️","okay okay you've got my attention"],
+    neu:["hehe go on then~","ooh interesting, tell me more!","mm the chai here is so good right?","that's cute, what else you got?"],
+    neg:["hmm that was kind of a lot 😅","eh, i've heard smoother tbh","oof, swing and a miss buddy"],
+    shut:["yeah no, that's a hard pass 😬","ok that's gross, i'll finish my chai alone","aaand the vibe just died. be normal?"]},
+  her_med:{
+    pos:["ha. okay that was genuinely clever.","not bad, you might actually be interesting.","fine, that earned a smile. don't get cocky.","huh, a curveball. i respect it."],
+    neu:["mm-hm. keep talking.","bold opener, let's see where this goes.","the coffee's judging you too, fyi."],
+    neg:["wow, did that line come with a coupon?","yikes. try again, with a personality.","i've seen better game on a chessboard."],
+    shut:["and there it is. we're done here.","gross. check, please.","imagine saying that out loud. no."]},
+  her_hard:{
+    pos:["...alright. that was actually thoughtful.","hm. you're not as shallow as you look.","okay, i'll allow that. barely.","surprising. say more real things like that."],
+    neu:["and why should that interest me?","i'm listening. for now.","prove it isn't just talk."],
+    neg:["that's the best you have? disappointing.","no. try thinking first.","i've already forgotten that."],
+    shut:["absolutely not. don't.","we're finished. don't follow me.","that's beneath even you. goodbye."]},
+  him_easy:{
+    pos:["dude that's awesome haha 😄","okay i'm officially having a great time!","see this is why i love people, you're great","hah you seem really cool honestly","aw man, good one!"],
+    neu:["oh nice, tell me more!","haha okay okay what else?","this cafe's the best right?","totally, i'm with you"],
+    neg:["oh uh... that was kinda weird haha","hmm, not sure about that one man","eh, lost me a little there"],
+    shut:["whoa no, not cool dude 😬","yeah i'm gonna head out, that was gross","nope. be respectful please."]},
+  him_med:{
+    pos:["heh. smooth. i see you.","alright, that was actually solid.","okay you're kinda cool, ngl.","respect. that one landed."],
+    neu:["mm. go on.","alright, i'm curious.","chill. what's your deal?"],
+    neg:["oof, that was a little cringe ngl.","nah, that ain't it chief.","yikes, dial it back a notch."],
+    shut:["nope, that's weird. we're good.","gross, man. i'm out.","yeah no. respect yourself a little."]},
+  him_hard:{
+    pos:["...huh. that was almost real. i like real.","okay, you didn't bore me. rare.","that's got some soul to it. continue.","fine. that resonated. slightly."],
+    neu:["hm.","...and?","the acoustics in here beat most lines i hear."],
+    neg:["try-hard. i can hear it from here.","that's noise, not music.","no. the opposite of interesting."],
+    shut:["gross. we're done.","that's cheap. i'm leaving.","no. don't ever open with that."]}
+};
+
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function has(t, list){ return list.some(w=>t.includes(w)); }
+
+function offlineJudge(text, charKey, diffKey){
+  const t = " "+text.toLowerCase().trim()+" ";
+  const d = DIFF[diffKey], bank = REPLIES[charKey];
+  // hard safety shutdown
+  if(has(t, CRUDE)){
+    return {reply:pick(bank.shut), delta:-24, expression:'annoyed', note:'inappropriate'};
+  }
+  let score = 0;
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const len = text.trim().length;
+  // curiosity: asking about them
+  if(text.includes('?')) score += 7;
+  if(has(t, WARM)) score += 6;
+  // reasonable effort
+  if(len>=12 && len<=140) score += 4;
+  if(words.length>=3 && words.length<=28) score += 2;
+  // penalties
+  if(has(t, CHEESY)) score -= 14;
+  if(has(t, DESPERATE)) score -= 12;
+  if(len<4) score -= 8;
+  if(len>200) score -= 6;
+  if(/(.)\1{4,}/.test(t)) score -= 4;               // spam like "aaaaa"
+  if(text===text.toUpperCase() && len>6) score -= 4; // ALL CAPS yelling
+  // a little variance so it feels alive
+  score += Math.floor(Math.random()*7)-3;
+  // scale by difficulty
+  if(score>=0) score = Math.round(score*d.posScale);
+  else score = Math.round(score*d.negScale);
+  let delta = Math.max(-25, Math.min(25, score));
+  let expression, tier;
+  if(delta>=12){expression='love'; tier='pos';}
+  else if(delta>=4){expression='smile'; tier='pos';}
+  else if(delta>=-3){expression='neutral'; tier='neu';}
+  else if(delta>=-12){expression='unimpressed'; tier='neg';}
+  else {expression='annoyed'; tier='neg';}
+  const reply = pick(bank[tier]==='shut'?bank.shut:bank[tier]);
+  return {reply, delta, expression, note:tier};
+}
+
+/* ============================================================
+   AI — online Worker path with offline fallback.
+   ============================================================ */
+function buildSystem(charKey, diffKey){
+  const ch = CHARS[charKey], d = DIFF[diffKey];
+  return "You role-play a friendly cafe stranger named "+ch.name+" in Krishna's Rizz Cafe, a lighthearted PG game "
+    +"for a school club. Keep every reply clean and appropriate for teenagers — never sexual, explicit, suggestive, "
+    +"or romantic beyond a wholesome 'you seem cool' level. You are won over by genuine humor, confidence, kindness, "
+    +"curiosity and clever banter. You are put off by anything crude, creepy, sexual, aggressive or desperate — react "
+    +"with boredom or mild disgust and a negative delta; never play along with it. Stay in character with 1-2 short "
+    +"texting-style sentences. Difficulty is "+d.label+" (higher difficulty = harder to impress, smaller positive "
+    +"deltas). Personality: "+ch.persona+" Return ONLY valid JSON of the form "
+    +'{"reply": string, "delta": integer from -25 to 25, "expression": one of '
+    +'"love"|"smile"|"neutral"|"unimpressed"|"annoyed", "note": short string}.';
+}
+function clampExpr(e){ return ["love","smile","neutral","unimpressed","annoyed"].includes(e)?e:"neutral"; }
+
+async function judge(text, charKey, diffKey, history){
+  if(!WORKER_URL){ return offlineJudge(text, charKey, diffKey); }
+  try{
+    const messages = history.concat([{role:'user',content:
+      "Difficulty: "+DIFF[diffKey].label+". Conversation so far is above. My latest line: \""+text+"\". "
+      +"Judge it and reply as "+CHARS[charKey].name+". Return ONLY the JSON."}]);
+    const res = await fetch(WORKER_URL,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({system:buildSystem(charKey,diffKey), messages})});
+    if(!res.ok) throw new Error('bad status '+res.status);
+    const data = await res.json();
+    let txt = (data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('');
+    txt = txt.replace(/```json/gi,'').replace(/```/g,'').trim();
+    const obj = JSON.parse(txt);
+    let delta = Math.round(Number(obj.delta));
+    if(!isFinite(delta)) delta = 0;
+    delta = Math.max(-25, Math.min(25, delta));
+    return {reply:String(obj.reply||"...").slice(0,180), delta,
+      expression:clampExpr(obj.expression), note:String(obj.note||"")};
+  }catch(e){
+    console.warn('AI fallback:', e.message);
+    return offlineJudge(text, charKey, diffKey);
+  }
+}
+
+async function orderReaction(item, charKey){
+  // bhaji always forces the ecstatic easter-egg line
+  if(item.id==='bhaji'){
+    return {reply:BHAJI_LINE[charKey], expression:'love'};
+  }
+  const canned = {reply:ITEM_LINE[item.id], expression:item.id==='water'?'unimpressed':(item.id==='full'?'smile':'smile')};
+  if(!WORKER_URL) return canned;
+  try{
+    const res = await fetch(WORKER_URL,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({system:buildSystem(charKey, G.diff), messages:[{role:'user',content:
+        "I just ordered you a "+item.name.replace(/[^\x00-\x7F]/g,'').trim()+" at the cafe. React in ONE short, clean, "
+        +"in-character line. Return ONLY JSON {\"reply\":string,\"expression\":\"love\"|\"smile\"|\"neutral\"|\"unimpressed\"|\"annoyed\"}."}]})});
+    if(!res.ok) throw new Error('status');
+    const data = await res.json();
+    let txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('').replace(/```json/gi,'').replace(/```/g,'').trim();
+    const o = JSON.parse(txt);
+    return {reply:String(o.reply||canned.reply).slice(0,160), expression:clampExpr(o.expression)};
+  }catch(e){ return canned; }
+}
+
+const ITEM_LINE = {
+  samosa:"ooh samosa — the crispy corner is the best part. good shout.",
+  lassi:"mango lassi? sweet choice, literally. thanks!",
+  chai:"masala chai, a classic. you really can't go wrong.",
+  matcha:"matcha? fancy. i respect the aesthetic.",
+  coffee:"filter coffee — strong pick. keeps things interesting.",
+  water:"...just water. bold move ordering me tap water. thrilling.",
+  gulab:"gulab jamun!! warm and sweet, yes please 😊",
+  rasmalai:"ras malai? okay, you clearly have taste.",
+  icecream:"ice cream never misses. nice one.",
+  cupcake:"aww, a cupcake. that's cute of you.",
+  cookie:"a cookie? simple, but honestly it works.",
+  full:"i'm good, but thanks for asking — that's sweet of you."
+};
+const BHAJI_LINE = {
+  her_easy:"Onion bhaji?! okay you actually GET it 😍 you might be my favorite person here.",
+  her_med:"Onion bhaji. okay. OKAY. you might be the one. don't make it weird.",
+  her_hard:"...onion bhaji. i wasn't going to smile today. you ruined that. thank you 😌",
+  him_easy:"ONION BHAJI?! best decision anyone's ever made — you're officially awesome 😍",
+  him_med:"onion bhaji. bro. you just unlocked something. instant respect.",
+  him_hard:"onion bhaji... that's poetry in fried form. okay. you get me."
+};
+/* ============================================================
+   SCREEN MANAGEMENT
+   ============================================================ */
+const $ = id => document.getElementById(id);
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = $(id); el.classList.add('active','fadein');
+  setTimeout(()=>el.classList.remove('fadein'), 500);
+}
+
+/* ---------- BOOT SPLASH ---------- */
+(function bootSplash(){
+  const sw = $('steamwrap');
+  for(let i=0;i<4;i++){
+    const p = document.createElement('div');
+    p.className='puff';
+    p.style.left=(20+i*26)+'px';
+    p.style.animationDelay=(i*0.5)+'s';
+    sw.appendChild(p);
+  }
+  drawRows($('splashcup'), SPRITES.cupbig, DP, 9);
+  setTimeout(()=>{
+    $('splash').classList.add('fadeout');
+    setTimeout(()=>{ $('splash').classList.remove('active','fadeout'); buildTitle(); show('title'); }, 450);
+  }, 1600);
+})();
+
+/* ---------- TITLE SCREEN ---------- */
+let titleBuilt=false;
+function buildTitle(){
+  if(titleBuilt) return; titleBuilt=true;
+  // drifting parallax clouds
+  const cl = $('clouds');
+  const specs=[{s:7,t:8,d:48,o:.95},{s:5,t:22,d:70,o:.75},{s:9,t:14,d:60,o:.9},
+    {s:4,t:38,d:90,o:.6},{s:6,t:30,d:55,o:.8},{s:5,t:5,d:80,o:.7}];
+  specs.forEach((sp,i)=>{
+    const cv=document.createElement('canvas'); cv.className='cloud';
+    drawRows(cv, SPRITES.cloud, DP, sp.s);
+    cv.style.top=sp.t+'vh'; cv.style.opacity=sp.o;
+    cv.style.animationDuration=sp.d+'s';
+    cv.style.animationDelay=(-sp.d*Math.random())+'s';
+    cl.appendChild(cv);
+  });
+  // sign decor sprites
+  drawSprite($('leafTL'),'leaf',5);
+  drawSprite($('leafBR'),'leaf',5);
+  drawSprite($('signchai'),'chai',5);
+  drawSprite($('mascot'),'mascot',7);
+  drawSprite($('btnNewIcon'),'chai',5);
+  drawSprite($('btnHowIcon'),'mascot',5);
+  // floating sparkles
+  const sw=$('signwrap');
+  [['-30px','10%'],['top','88%'],['40%','-24px'],['70%','102%']].forEach(pos=>{
+    const s=document.createElement('div'); s.className='sparkle'; s.textContent='✦';
+    s.style.color='#f6c86a'; s.style.fontSize='18px'; s.style.zIndex='2';
+    s.style.top=(pos[0]==='top'?'85%':pos[0]); s.style.left=pos[1];
+    s.style.animationDelay=(Math.random()*1.6)+'s';
+    sw.appendChild(s);
+  });
+}
+
+/* ============================================================
+   SETUP
+   ============================================================ */
+const SEL = {target:'her', diff:'easy'};
+function initSetup(){
+  $('targetrow').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    $('targetrow').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); SEL.target=b.dataset.t; refreshPreview();
+  });
+  $('diffrow').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    $('diffrow').querySelectorAll('.opt').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); SEL.diff=b.dataset.d; refreshPreview();
+  });
+  refreshPreview();
+}
+function curCharKey(){ return SEL.target+'_'+SEL.diff; }
+function refreshPreview(){
+  const key=curCharKey(), ch=CHARS[key];
+  drawBust($('preview'), key, 'smile', 9);
+  $('previewname').textContent=ch.name+"  ·  "+DIFF[SEL.diff].label;
+  $('previewdesc').textContent=ch.desc;
+}
+/* ============================================================
+   GAME STATE + LOOP
+   ============================================================ */
+let G = null;
+const LEADERBOARD = []; // in-memory, no localStorage
+
+function startDate(){
+  const name = ($('pname').value.trim() || 'Player 1').slice(0,14);
+  const key = curCharKey(), ch = CHARS[key], d = DIFF[SEL.diff];
+  G = {pname:name, charKey:key, target:SEL.target, diff:SEL.diff,
+    vibe:d.start, turn:0, cap:d.cap, over:false, busy:false,
+    orderingBonus:0, ordersDone:0, round2Fired:false,
+    history:[], curExpr:'neutral'};
+  $('chatlog').innerHTML='';
+  $('charname').textContent = ch.name.toUpperCase();
+  updateHud(); updateFace('neutral');
+  show('game');
+  addBub('sys', ch.name+" slides into the seat across from you. don't fumble.");
+  setTimeout(()=>{ addBub('them', greet(ch)); }, 500);
+  // Round 1 ordering on sit-down
+  setTimeout(()=>openMenu(1), 1200);
+}
+function greet(ch){
+  const g={Hana:"hi! ooh you actually sat down, brave 😄 i'm Hana.",
+    Mika:"well. this seat was empty for a reason. impress me — i'm Mika.",
+    Sofia:"you're sitting here on purpose? interesting. i'm Sofia.",
+    Danny:"hey hey! glad you came over, i'm Danny 😁",
+    Leo:"'sup. bold of you to sit down. i'm Leo.",
+    Kai:"...hey. you interrupted a good song in my head. i'm Kai."};
+  return g[ch.name];
+}
+
+function updateHud(){
+  const v=Math.round(G.vibe);
+  $('vibefill').style.width=v+'%';
+  $('vibetxt').textContent=v;
+  $('turns').textContent='TURN '+Math.min(G.turn+1,G.cap)+'/'+G.cap;
+}
+const MOODS={love:'💖 charmed',smile:'😊 into it',neutral:'☕ vibing',unimpressed:'😐 unsure',annoyed:'😤 not feeling it'};
+function updateFace(expr){
+  G.curExpr=expr;
+  drawBust($('charcv'), G.charKey, expr, 12);
+  $('charmood').textContent=MOODS[expr]||MOODS.neutral;
+}
+
+function addBub(kind, text, delta){
+  const b=document.createElement('div');
+  b.className='bub '+kind;
+  b.textContent=text;
+  if(typeof delta==='number' && delta!==0){
+    const d=document.createElement('div'); d.className='delta';
+    d.textContent=(delta>0?'▲ +':'▼ ')+delta+' vibe';
+    d.style.color=delta>0?'#8fd06a':'#f2a0b4';
+    b.appendChild(d);
+  }
+  $('chatlog').appendChild(b);
+  $('chatlog').scrollTop=$('chatlog').scrollHeight;
+}
+
+function floaties(kind){
+  const panel=$('charpanel');
+  for(let i=0;i<8;i++){
+    const f=document.createElement('canvas'); f.className='floaty';
+    if(kind==='heart') drawSprite(f,'heart',5);
+    else { f.width=f.height=14; const c=f.getContext('2d'); c.fillStyle='#f6c86a';
+      c.font='14px monospace'; c.fillText('✦',0,12); }
+    f.style.left=(30+Math.random()*160)+'px';
+    f.style.bottom=(70+Math.random()*40)+'px';
+    f.style.animationDelay=(Math.random()*0.4)+'s';
+    panel.appendChild(f);
+    setTimeout(()=>f.remove(),1900);
+  }
+}
+
+async function sendLine(){
+  if(!G || G.over || G.busy) return;
+  const inp=$('chatin'); const text=inp.value.trim();
+  if(!text) return;
+  inp.value=''; G.busy=true; setInput(false);
+  addBub('you', text);
+  G.turn++;
+  const res = await judge(text, G.charKey, G.diff, G.history);
+  G.history.push({role:'user',content:text});
+  G.history.push({role:'assistant',content:res.reply});
+  if(G.history.length>16) G.history=G.history.slice(-16);
+  applyDelta(res.delta);
+  updateFace(res.expression);
+  addBub('them', res.reply, res.delta);
+  if(res.expression==='love') floaties('heart');
+  updateHud();
+  if(checkEnd()) return;
+  // Round 2 dessert after ~4 player messages
+  if(!G.round2Fired && G.turn>=4){
+    G.round2Fired=true;
+    setTimeout(()=>openMenu(2), 600);
+    return;
+  }
+  if(G.turn>=G.cap){ endDate('cap'); return; }
+  G.busy=false; setInput(true);
+}
+function applyDelta(delta){ G.vibe=Math.max(0,Math.min(100,G.vibe+delta)); }
+function setInput(on){
+  $('chatin').disabled=!on; $('sendbtn').disabled=!on;
+  if(on) $('chatin').focus();
+}
+function checkEnd(){
+  if(G.vibe>=100){ endDate('win'); return true; }
+  if(G.vibe<=0){ endDate('lose'); return true; }
+  return false;
+}
+
+/* ============================================================
+   ORDERING MECHANIC + ONION BHAJI EASTER EGG
+   ============================================================ */
+const MENU1=[
+  {id:'bhaji',name:'Onion Bhaji 🧅',pts:18,spr:'bhaji'},
+  {id:'samosa',name:'Samosa',pts:12,spr:'samosa'},
+  {id:'lassi',name:'Mango Lassi',pts:11,spr:'lassi'},
+  {id:'chai',name:'Masala Chai',pts:10,spr:'chai'},
+  {id:'matcha',name:'Matcha Latte',pts:8,spr:'matcha'},
+  {id:'coffee',name:'Filter Coffee',pts:7,spr:'coffee'},
+  {id:'water',name:'Just Water',pts:2,spr:'water'}];
+const MENU2=[
+  {id:'gulab',name:'Gulab Jamun',pts:12,spr:'gulab'},
+  {id:'rasmalai',name:'Ras Malai',pts:11,spr:'rasmalai'},
+  {id:'icecream',name:'Ice Cream',pts:9,spr:'icecream'},
+  {id:'cupcake',name:'Cupcake',pts:8,spr:'cupcake'},
+  {id:'cookie',name:'Cookie',pts:7,spr:'cookie'},
+  {id:'full',name:"I'm full",pts:0,spr:'full'}];
+
+function openMenu(round){
+  if(G.over) return;
+  G.busy=true; setInput(false);
+  const items = round===1?MENU1:MENU2;
+  const ch=CHARS[G.charKey];
+  $('menutitle').textContent = round===1?'CAFE MENU':'DESSERT MENU';
+  $('menusub').textContent = round===1
+    ? 'Order something for '+ch.name+'...'
+    : 'Treat '+ch.name+' to dessert?';
+  const grid=$('menugrid'); grid.innerHTML='';
+  items.forEach(it=>{
+    const b=document.createElement('button'); b.className='fooditem';
+    const cv=document.createElement('canvas'); drawSprite(cv,it.spr,7);
+    const lbl=document.createElement('div'); lbl.textContent=it.name;
+    const pt=document.createElement('div'); pt.textContent=(it.pts>0?'+'+it.pts+' vibe':'—');
+    pt.style.color='#f6c86a'; pt.style.fontSize='18px';
+    b.append(cv,lbl,pt);
+    b.onclick=()=>chooseItem(it);
+    grid.appendChild(b);
+  });
+  $('menuboard').classList.add('open');
+}
+
+async function chooseItem(item){
+  $('menuboard').classList.remove('open');
+  G.ordersDone++;
+  G.orderingBonus += item.pts;
+  applyDelta(item.pts);
+  updateHud();
+  addBub('sys', 'You ordered '+item.name+' for '+CHARS[G.charKey].name+'.');
+  const r = await orderReaction(item, G.charKey);
+  updateFace(r.expression);
+  addBub('them', r.reply, item.pts||undefined);
+  if(item.id==='bhaji'){ floaties('heart'); setTimeout(()=>floaties('spark'),200); }
+  else if(r.expression==='love') floaties('heart');
+  if(checkEnd()) return;
+  G.busy=false; setInput(true);
+}
+
+/* ============================================================
+   SCORING + END
+   ============================================================ */
+const RANKS=[
+  {min:180,tag:'🔥 Certified Rizzler',blurb:"absolute legend. the cafe will speak of this date for years."},
+  {min:130,tag:'😎 Smooth Operator',blurb:"clean, confident, effortless. serious game on display."},
+  {min:90,tag:'🙂 Decent Game',blurb:"solid effort — a few smooth lines, a couple of stumbles."},
+  {min:50,tag:'😬 Kinda Fumbled',blurb:"rough patches. the bhaji could've saved you, you know."},
+  {min:-999,tag:'💀 Fumbled the Bag',blurb:"oof. regroup, get a chai, try again champ."}];
+
+function endDate(outcome){
+  G.over=true; G.busy=true; setInput(false);
+  $('menuboard').classList.remove('open');
+  const d=DIFF[G.diff];
+  const finalVibe=Math.round(G.vibe);
+  const won = outcome==='win';
+  const mult=d.mult;
+  const speedBonus = won ? Math.round((G.cap-G.turn)*8*mult) : 0;
+  const base = Math.round(finalVibe*mult);
+  const score = Math.max(0, base + speedBonus + G.orderingBonus);
+  const expr = won?'love':(outcome==='lose'?'annoyed':(finalVibe>=55?'smile':'unimpressed'));
+  drawBust($('resultcv'), G.charKey, expr, 12);
+  const ch=CHARS[G.charKey];
+  const outMsg = won?(ch.name+" is charmed 💘")
+    : outcome==='lose'?(ch.name+" walked out 🚪")
+    : ("time's up — the date ends ⏳");
+  $('outcomehead').textContent = won?'CHARMED!':(outcome==='lose'?'WALKED OUT':"TIME'S UP");
+  $('outcometxt').textContent = outMsg;
+  $('bigscore').textContent = score;
+  const rank=RANKS.find(r=>score>=r.min);
+  $('rank').textContent = rank.tag;
+  $('scorebreak').innerHTML =
+    "vibe "+finalVibe+" × "+mult+" = "+base+"<br>"
+    +(speedBonus?("speed bonus +"+speedBonus+"<br>"):"")
+    +"ordering bonus +"+G.orderingBonus+"<br>"
+    +'<span style="color:var(--gold)">'+rank.blurb+'</span>';
+  LEADERBOARD.push({name:G.pname, score, target:G.target, difficulty:G.diff});
+  LEADERBOARD.sort((a,b)=>b.score-a.score);
+  show('result');
+}
+
+/* ============================================================
+   LEADERBOARD
+   ============================================================ */
+function renderBoard(){
+  const list=$('boardlist'); list.innerHTML='';
+  if(!LEADERBOARD.length){ list.innerHTML='<div class="boardrow">no dates yet — go charm someone!</div>'; }
+  LEADERBOARD.slice(0,10).forEach((e,i)=>{
+    const row=document.createElement('div');
+    row.className='boardrow'+(i===0?' top':'');
+    const t=e.target==='her'?'👩':'👨';
+    const dl={easy:'😊',med:'😏',hard:'😤'}[e.difficulty];
+    const left=document.createElement('div');
+    left.textContent=(i+1)+'. '+e.name+'  '+t+dl;
+    const right=document.createElement('div'); right.className='bscore';
+    right.textContent=e.score;
+    row.append(left,right);
+    list.appendChild(row);
+  });
+}
+
+/* ============================================================
+   EVENT WIRING
+   ============================================================ */
+initSetup();
+$('btnNew').onclick=()=>{ show('setup'); };
+$('btnHow').onclick=()=>$('howto').classList.add('open');
+$('btnHowClose').onclick=()=>$('howto').classList.remove('open');
+$('howto').onclick=e=>{ if(e.target===$('howto')) $('howto').classList.remove('open'); };
+$('btnSit').onclick=startDate;
+$('sendbtn').onclick=sendLine;
+$('chatin').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); sendLine(); }});
+$('pname').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); startDate(); }});
+$('btnBoard').onclick=()=>{ renderBoard(); show('board'); };
+$('btnNext').onclick=()=>{ show('setup'); refreshPreview(); };
+</script>
+</body>
+</html>
