@@ -1390,8 +1390,8 @@ const NAME_GOOD = ["alex","sam","mia","luna","leo","noah","aria","kai","zoe","ra
   "aisha","chloe","liam","maya","ivy","theo","nina","omar","sara","dev","emma","jay"];
 function scoreName(name){
   const n=(name||"").trim().toLowerCase();
-  if(NAME_LOVE.includes(n)) return {bonus:10, expr:'love',
-    line:'"'+name+'"?? okay i already like you. what a cute name 😍'};
+  if(NAME_LOVE.includes(n)) return {bonus:100, expr:'love', god:true,
+    line:'"'+name+'"?? 😍💘 wait — THE '+name+'?! i am obsessed with you already. this date is basically won.'};
   if(NAME_HATE.includes(n)) return {bonus:-20, expr:'annoyed',
     line:'ugh... "'+name+'"? that name gives me the ick. rough start.'};
   if(NAME_GOOD.includes(n)) return {bonus:6, expr:'smile',
@@ -1656,7 +1656,8 @@ function startDate(){
     orderingBonus:0, ordersDone:0, newAch:[], history:[],
     curExpr:'neutral', krishnaPending:false, maxed:false};
   const nr = scoreName(name);
-  G.vibe = Math.max(0, Math.min(100, G.vibe + nr.bonus));
+  if(nr.god){ G.godmode = true; G.maxed = true; }
+  G.vibe = nr.god ? 100 : Math.max(0, Math.min(100, G.vibe + nr.bonus));
   $('chatlog').innerHTML='';
   $('charname').textContent = ch.name.toUpperCase();
   updateFace('neutral'); updateHud();
@@ -1701,6 +1702,7 @@ function updateFace(expr){
   $('tell').textContent='👁 '+tellFor(expr);
 }
 function applyExpr(expr){
+  if(G.godmode) expr='love';   // kenzo/kenny: they're always smitten
   updateFace(expr);
   if(expr==='love'){ SFX.love(); floaties('heart'); }
   else if(expr==='annoyed' || expr==='unimpressed'){ SFX.bad(); }
@@ -1791,6 +1793,14 @@ async function sendLine(){
     if(G.found.size>=G.interests.length) grantAch('soulmate');
   }
 
+  // easter egg: name-drop Kenzo or Kenny as your friend → big vibe boost
+  let kenBonus = 0;
+  if(/\b(kenzo|kenny)\b/i.test(text)){
+    kenBonus = 30;
+    addBub('sys', "💛 you know Kenzo & Kenny?! omg any friend of theirs is a friend of mine 😍");
+    SFX.love(); floaties('heart');
+  }
+
   showTyping();
   const res = await judge(shown, G.charKey, G.diff, G.history);
   hideTyping();
@@ -1799,7 +1809,7 @@ async function sendLine(){
   G.history.push({role:'user',content:shown});
   G.history.push({role:'assistant',content:res.reply});
   if(G.history.length>16) G.history=G.history.slice(-16);
-  const delta = res.delta + comboBonus;
+  const delta = res.delta + comboBonus + kenBonus;
   applyDelta(delta);
   applyExpr(res.expression);
   addBub('them', res.reply, delta);
@@ -1825,7 +1835,10 @@ async function sendLine(){
   }
   nextTurnOrStage();
 }
-function applyDelta(delta){ G.vibe=Math.max(0,Math.min(100,G.vibe+delta)); }
+function applyDelta(delta){
+  if(G.godmode){ G.vibe=100; return; }   // kenzo/kenny easter egg: locked at max
+  G.vibe=Math.max(0,Math.min(100,G.vibe+delta));
+}
 function setInput(on){
   $('chatin').disabled=!on; $('sendbtn').disabled=!on;
   if(on) $('chatin').focus();
